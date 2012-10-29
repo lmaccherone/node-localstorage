@@ -27,13 +27,17 @@ compile = (watch, callback) ->
   options.unshift '-w' if watch
   run('coffee', options)
 
-task('compile', 'Compile CoffeeScript source files to JavaScript and place in ./js', () ->
+task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
     compile()
 )
 
-task('watch', 'Recompile CoffeeScript source files when modified and place in ./js *\n' +
-              '                          * Actually, it is best to just run `jitter . js` from the command line', () ->
-    compile(true)
+task('doctest', 'Generate docs with CoffeeDoc and place in ./docs', () ->
+  process.chdir(__dirname)
+  fs.readdir('./', (err, contents) ->
+    files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
+#     run('coffeedoc', ['-o', './docs', '-p', './package.json'].concat(files))  
+    run('coffeedoctest', ['--readme'].concat(files))
+  )
 )
 
 task('install', 'Install globally but from this source using npm', () ->

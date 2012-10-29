@@ -4,6 +4,17 @@ Copyright (c) 2009-2012, Lawrence S. Maccherone, Jr.
 
 _A drop-in substitute for the browser native localStorage API that runs on node.js._
 
+Note, this does not support the associative array notation supported by the native localStorage.
+However, it supports rest of the interface defined in the
+[localStorage spec](http://www.w3.org/TR/webstorage/#storage) including:
+
+  * length
+  * setItem(key, value)
+  * getItem(key)
+  * removeItem(key)
+  * key(n)
+  * clear()
+
 ## Credits ##
 
 Author: [Larry Maccherone](http://maccherone.com) (<Larry@Maccherone.com>)
@@ -12,19 +23,35 @@ Author: [Larry Maccherone](http://maccherone.com) (<Larry@Maccherone.com>)
 
 ### CoffeeScript ###
 
-    {LocalStorage} = require('../')
     unless localStorage?
+      {LocalStorage} = require('../')
       localStorage = new LocalStorage('./scratch')
-    
+
     localStorage.setItem('myFirstKey', 'myFirstValue')
     console.log(localStorage.getItem('myFirstKey'))
     # myFirstValue
+    
+    localStorage._deleteLocation()  # cleans up ./scratch created during doctest
+
+### JavaScript ###
+
+```JavaScript    
+if (typeof localStorage === "undefined" || localStorage === null) {
+  var LocalStorage = require('../').LocalStorage;
+  localStorage = new LocalStorage('./scratch');
+}
+
+localStorage.setItem('myFirstKey', 'myFirstValue');
+console.log(localStorage.getItem('myFirstKey'));
+```
 
 ## Installation ##
 
+`npm install node-localstorage`
+
 ## Changelog ##
 
-* 0.1.0 - 2012-10-28 - Original version
+* 0.1.0 - 2012-10-29 - Original version
 
 ## MIT License ##
 
