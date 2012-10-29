@@ -47,7 +47,7 @@ task('publish', 'Publish to npm', () ->
 )
 
 task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
-  {reporters} = require 'nodeunit'
-  process.chdir __dirname
-  reporters.default.run ['test']
+  {reporters} = require('nodeunit')
+  process.chdir(__dirname)
+  reporters.default.run(['test'])
 )

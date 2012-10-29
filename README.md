@@ -10,6 +10,16 @@ Author: [Larry Maccherone](http://maccherone.com) (<Larry@Maccherone.com>)
 
 ## Usage ##
 
+### CoffeeScript ###
+
+    {LocalStorage} = require('../')
+    unless localStorage?
+      localStorage = new LocalStorage('./scratch')
+    
+    localStorage.setItem('myFirstKey', 'myFirstValue')
+    console.log(localStorage.getItem('myFirstKey'))
+    # myFirstValue
+
 ## Installation ##
 
 ## Changelog ##
@@ -32,11 +42,3 @@ TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONIN
 THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
 IN THE SOFTWARE.
-
-###
-
-
-
-
-
-
