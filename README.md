@@ -24,7 +24,7 @@ Author: [Larry Maccherone](http://maccherone.com) (<Larry@Maccherone.com>)
 ### CoffeeScript ###
 
     unless localStorage?
-      {LocalStorage} = require('../')
+      {LocalStorage} = require('../')  # require('node-localstorage') for you
       localStorage = new LocalStorage('./scratch')
 
     localStorage.setItem('myFirstKey', 'myFirstValue')
@@ -37,7 +37,7 @@ Author: [Larry Maccherone](http://maccherone.com) (<Larry@Maccherone.com>)
 
 ```JavaScript    
 if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require('../').LocalStorage;
+  var LocalStorage = require('node-localstorage').LocalStorage;
   localStorage = new LocalStorage('./scratch');
 }
 

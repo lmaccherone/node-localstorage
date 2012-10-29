@@ -20,7 +20,12 @@ run = (command, options, next) ->
   )
 
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
-  run('coffee', ['-c', './'])
+
+  process.chdir(__dirname)
+  fs.readdir('./', (err, contents) ->
+    files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
+    run('coffee', ['-c'].concat(files))
+  )
 )
 
 task('doctest', 'Generate docs with CoffeeDoc and place in ./docs', () ->
@@ -32,7 +37,7 @@ task('doctest', 'Generate docs with CoffeeDoc and place in ./docs', () ->
   )
 )
 
-task('install', 'Install globally but from this source using npm', () ->
+task('install', 'NOT RECOMMENDED. Install globally but from this source using npm', () ->
   process.chdir(__dirname)
   run('npm install -g .')
 )
