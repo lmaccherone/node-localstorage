@@ -19,16 +19,8 @@ run = (command, options, next) ->
         console.log("Stdout exec'ing command '#{command}'...\n" + stdout)
   )
 
-compile = (watch, callback) ->
-  if typeof watch is 'function'
-    callback = watch
-    watch = false
-  options = ['-c', '-o', 'js', '.']
-  options.unshift '-w' if watch
-  run('coffee', options)
-
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
-    compile()
+  run('coffee', ['-c', './'])
 )
 
 task('doctest', 'Generate docs with CoffeeDoc and place in ./docs', () ->
