@@ -1,19 +1,26 @@
+[![build status](https://secure.travis-ci.org/lmaccherone/node-localstorage.png)](http://travis-ci.org/lmaccherone/node-localstorage)
 # node-localstorage #
 
-Copyright (c) 2009-2012, Lawrence S. Maccherone, Jr.
+Copyright (c) 2012, Lawrence S. Maccherone, Jr.
 
 _A drop-in substitute for the browser native localStorage API that runs on node.js._
 
-Note, this does not support the associative array notation supported by the native localStorage.
-However, it supports rest of the interface defined in the
-[localStorage spec](http://www.w3.org/TR/webstorage/#storage) including:
+### Working ###
 
+* All methods in the [localStorage spec](http://www.w3.org/TR/webstorage/#storage) 
+  interface including:
   * length
   * setItem(key, value)
   * getItem(key)
   * removeItem(key)
   * key(n)
-  * clear()
+  * clear()  
+* Serializes to disk in the location specified during instantiation
+
+### Unsupported ###
+
+* Events
+* Associative array syntax `localStorage['myKey'] = 'myValue'`
 
 ## Credits ##
 
@@ -52,6 +59,7 @@ console.log(localStorage.getItem('myFirstKey'));
 ## Changelog ##
 
 * 0.1.0 - 2012-10-29 - Original version
+* 0.1.1 - 2012-10-29 - Update to support Travis CI
 
 ## MIT License ##
 

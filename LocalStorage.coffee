@@ -13,7 +13,7 @@ _rm = (target) ->
 
 class LocalStorage
   constructor: (@location) ->
-    @length = 0
+    @length = 0  # !TODO: Maybe change this to a property with __defineProperty__
     @keys = []
     @_init()
   
