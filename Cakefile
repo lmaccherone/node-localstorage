@@ -44,7 +44,11 @@ task('publish', 'Publish to npm', () ->
 task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
   {reporters} = require('nodeunit')
   process.chdir(__dirname)
-  reporters.default.run(['test'])
+  reporters.default.run(['test'], undefined, (failure) -> 
+    if failure?
+      console.log(failure)
+      process.exit(1)
+  )
 )
 
 task('testall', 'Runs both tests and doctests', () ->
