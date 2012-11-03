@@ -26,7 +26,7 @@ exports.LocalStorageTest =
     
     test.deepEqual(localStorage.keys, ['1'])
     test.equal(localStorage.length, 1)
-    test.equal(localStorage.key(0), '2')
+    test.equal(localStorage.key(0), '1')
     
     localStorage.clear()
     test.equal(localStorage.length, 0)
