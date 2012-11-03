@@ -20,7 +20,6 @@ run = (command, options, next) ->
   )
 
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
-
   process.chdir(__dirname)
   fs.readdir('./', (err, contents) ->
     files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
@@ -46,4 +45,9 @@ task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
   {reporters} = require('nodeunit')
   process.chdir(__dirname)
   reporters.default.run(['test'])
+)
+
+task('testall', 'Runs both tests and doctests', () ->
+  invoke('test')
+  invoke('doctest')
 )
