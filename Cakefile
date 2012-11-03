@@ -28,18 +28,13 @@ task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   )
 )
 
-task('doctest', 'Generate docs with CoffeeDoc and place in ./docs', () ->
+task('doctest', 'Runs doctests found in documentation', () ->
   process.chdir(__dirname)
   fs.readdir('./', (err, contents) ->
     files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
 #     run('coffeedoc', ['-o', './docs', '-p', './package.json'].concat(files))  
     run('coffeedoctest', ['--readme'].concat(files))
   )
-)
-
-task('install', 'NOT RECOMMENDED. Install globally but from this source using npm', () ->
-  process.chdir(__dirname)
-  run('npm install -g .')
 )
 
 task('publish', 'Publish to npm', () ->

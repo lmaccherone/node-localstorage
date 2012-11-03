@@ -60,6 +60,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 * 0.1.0 - 2012-10-29 - Original version
 * 0.1.1 - 2012-10-29 - Update to support Travis CI
+* 0.1.2 - 2012-11-02 - Finally got Travis CI working
 
 ## MIT License ##
 
