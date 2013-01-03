@@ -28,14 +28,17 @@
 
   LocalStorage = (function() {
 
-    function LocalStorage(location) {
+    function LocalStorage(location, quota) {
       this.location = location;
+      this.quota = quota != null ? quota : 5 * 1024 * 1024;
       this.length = 0;
+      this.bytesInUse = 0;
       this.keys = [];
       this._init();
     }
 
     LocalStorage.prototype._init = function() {
+      var k, value, _i, _len, _ref, _results;
       if (fs.existsSync(this.location)) {
         if (!fs.statSync(this.location).isDirectory()) {
           throw new Error("A file exists at the location '" + this.location + "' when trying to create/open localStorage");
@@ -45,18 +48,44 @@
         fs.mkdirSync(this.location);
       }
       this.keys = fs.readdirSync(this.location);
-      return this.length = this.keys.length;
+      this.length = this.keys.length;
+      this.bytesInUse = 0;
+      _ref = this.keys;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        k = _ref[_i];
+        value = this.getItem(k);
+        if ((value != null ? value.length : void 0) != null) {
+          _results.push(this.bytesInUse += value.length);
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
     };
 
     LocalStorage.prototype.setItem = function(key, value) {
-      var existsBeforeSet, filename;
+      var e, existsBeforeSet, filename, oldLength, valueString, valueStringLength;
       key = key.toString();
       filename = path.join(this.location, key);
       existsBeforeSet = fs.existsSync(filename);
-      fs.writeFileSync(filename, value.toString(), 'utf8');
+      valueString = value.toString();
+      valueStringLength = valueString.length;
+      if (existsBeforeSet) {
+        oldLength = this.getItem(key).length;
+      } else {
+        oldLength = 0;
+      }
+      if (this.bytesInUse - oldLength + valueStringLength > this.quota) {
+        e = new Error('Quota exceeded.');
+        e.name = 'QUOTA_EXCEEDED_ERR';
+        throw e;
+      }
+      fs.writeFileSync(filename, valueString, 'utf8');
       if (!existsBeforeSet) {
         this.keys.push(key);
-        return this.length = this.keys.length;
+        this.length = this.keys.length;
+        return this.bytesInUse += valueStringLength;
       }
     };
 
@@ -88,13 +117,19 @@
     LocalStorage.prototype.clear = function() {
       _emptyDirectory(this.location);
       this.keys = [];
-      return this.length = 0;
+      this.length = 0;
+      return this.bytesInUse = 0;
+    };
+
+    LocalStorage.prototype.getBytesInUse = function() {
+      return this.bytesInUse;
     };
 
     LocalStorage.prototype._deleteLocation = function() {
       _rm(this.location);
       this.keys = [];
-      return this.length = 0;
+      this.length = 0;
+      return this.bytesInUse = 0;
     };
 
     return LocalStorage;

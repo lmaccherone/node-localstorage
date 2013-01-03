@@ -1,3 +1,5 @@
 .DS_Store
 scratch
 js
+node_modules
+.idea

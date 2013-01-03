@@ -1,5 +1,11 @@
 {LocalStorage} = require('../')
 
+repeat = (string, count) ->
+  a = []
+  while count--
+    a.push(string)
+  return a.join('')
+
 exports.LocalStorageTest =
 
   testLocalStorage: (test) ->
@@ -32,4 +38,31 @@ exports.LocalStorageTest =
     test.equal(localStorage.length, 0)
        
     localStorage._deleteLocation()
+    test.done()
+
+  testQuota: (test) ->
+    n10 = '01234567890'
+    n100 = repeat('0123456789', 10)
+    n1000 = repeat(n100, 10)
+    n10000 = repeat(n1000, 10)
+
+    ls = new LocalStorage('./scratch2', 3000)
+    ls.setItem(1, n1000)
+    ls.setItem(2, n1000)
+    ls.setItem(3, n1000)
+    test.equal(ls.getBytesInUse(), 3000)
+
+    f = () ->
+      ls.setItem(6, n10)
+
+    test.throws(f, Error)
+    ls.setItem(2, n1000)  # Should not throw because it replaces one of equal size
+
+    ls.removeItem(3)
+    ls.setItem(7, n100)
+    f2 = () ->
+      ls.setitem(8, n1000)
+    test.throws(f2, Error)
+
+    ls._deleteLocation()
     test.done()

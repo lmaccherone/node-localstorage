@@ -16,6 +16,7 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   * key(n)
   * clear()  
 * Serializes to disk in the location specified during instantiation
+* Supports the setting of a quota (default 5MB
 
 ### Unsupported ###
 
@@ -24,7 +25,7 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
 
 ## Credits ##
 
-Author: [Larry Maccherone](http://maccherone.com) (<Larry@Maccherone.com>)
+Author: [Larry Maccherone](http://maccherone.com)
 
 ## Usage ##
 
@@ -58,6 +59,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 0.2.0 - 2013-01-03 - Added quota support
 * 0.1.0 - 2012-10-29 - Original version
 * 0.1.1 - 2012-10-29 - Update to support Travis CI
 * 0.1.2 - 2012-11-02 - Finally got Travis CI working
