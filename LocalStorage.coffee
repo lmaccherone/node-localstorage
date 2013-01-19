@@ -11,7 +11,7 @@ _rm = (target) ->
   else
     fs.unlinkSync(target)
 
-class QuotaExceededError extends Error
+class QUOTA_EXCEEDED_ERR extends Error
   constructor: (@message = 'Unknown error.') ->
     if Error.captureStackTrace?
       Error.captureStackTrace(this, @constructor)
@@ -24,7 +24,7 @@ class LocalStorage
     @bytesInUse = 0
     @keys = []
     @_init()
-    @QuotaExceededError = QuotaExceededError
+    @QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
   
   _init: () ->
     if fs.existsSync(@location)
@@ -51,7 +51,7 @@ class LocalStorage
     else
       oldLength = 0
     if @bytesInUse - oldLength + valueStringLength > @quota
-      throw new QuotaExceededError()
+      throw new QUOTA_EXCEEDED_ERR()
     fs.writeFileSync(filename, valueString, 'utf8')
     unless existsBeforeSet
       @keys.push(key)
@@ -95,4 +95,4 @@ toString: ->
   return "#{@name}: #{@message}"
 
 exports.LocalStorage = LocalStorage
-exports.QuotaExceededError = QuotaExceededError
+exports.QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
