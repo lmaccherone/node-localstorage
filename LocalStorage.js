@@ -84,7 +84,7 @@
     };
 
     LocalStorage.prototype.setItem = function(key, value) {
-      var e, existsBeforeSet, filename, oldLength, valueString, valueStringLength;
+      var existsBeforeSet, filename, oldLength, valueString, valueStringLength;
       key = key.toString();
       filename = path.join(this.location, key);
       existsBeforeSet = fs.existsSync(filename);
@@ -96,9 +96,7 @@
         oldLength = 0;
       }
       if (this.bytesInUse - oldLength + valueStringLength > this.quota) {
-        e = new Error('Quota exceeded.');
-        e.name = 'QUOTA_EXCEEDED_ERR';
-        throw e;
+        throw new QuotaExceededError();
       }
       fs.writeFileSync(filename, valueString, 'utf8');
       if (!existsBeforeSet) {

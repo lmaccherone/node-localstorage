@@ -51,9 +51,7 @@ class LocalStorage
     else
       oldLength = 0
     if @bytesInUse - oldLength + valueStringLength > @quota
-      e = new Error('Quota exceeded.')
-      e.name = 'QUOTA_EXCEEDED_ERR'
-      throw e
+      throw new QuotaExceededError()
     fs.writeFileSync(filename, valueString, 'utf8')
     unless existsBeforeSet
       @keys.push(key)
