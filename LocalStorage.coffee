@@ -11,6 +11,12 @@ _rm = (target) ->
   else
     fs.unlinkSync(target)
 
+class QuotaExceededError extends Error
+  constructor: (@message = 'Unknown error.') ->
+    if Error.captureStackTrace?
+      Error.captureStackTrace(this, @constructor)
+    @name = @constructor.name
+
 class LocalStorage
 
   constructor: (@location, @quota = 5 * 1024 * 1024) ->
@@ -18,6 +24,7 @@ class LocalStorage
     @bytesInUse = 0
     @keys = []
     @_init()
+    @QuotaExceededError = QuotaExceededError
   
   _init: () ->
     if fs.existsSync(@location)
@@ -85,5 +92,9 @@ class LocalStorage
     @keys = []
     @length = 0
     @bytesInUse = 0
-    
+
+toString: ->
+  return "#{@name}: #{@message}"
+
 exports.LocalStorage = LocalStorage
+exports.QuotaExceededError = QuotaExceededError
