@@ -13,9 +13,9 @@ exports.LocalStorageTest =
 
     test.equal(localStorage.location, './scratch')
     
-    localStorage.setItem('1', 'something')
-    test.equal(localStorage.getItem('1'), 'something')
     
+    localStorage.setItem('/', 'something')
+    test.equal(localStorage.getItem('/'), 'something')
     o = {a:1, b:'some string', c:{x: 1, y: 2}}
     localStorage.setItem('2', o)
     test.deepEqual(localStorage.getItem('2'), o.toString())
@@ -24,16 +24,16 @@ exports.LocalStorageTest =
     localStorage.setItem('2', a)
     test.deepEqual(localStorage.getItem('2'), a.toString())
     
-    test.deepEqual(localStorage.keys, ['1', '2'])
+    test.deepEqual(localStorage.keys, ['/', '2'])
     test.equal(localStorage.length, 2)
 
     localStorage.removeItem('2')
     test.equal(localStorage.getItem('2'), null)
     
-    test.deepEqual(localStorage.keys, ['1'])
+    test.deepEqual(localStorage.keys, ['/'])
     test.equal(localStorage.length, 1)
-    test.equal(localStorage.key(0), '1')
     
+    test.equal(localStorage.key(0), '/')
     localStorage.clear()
     test.equal(localStorage.length, 0)
        
