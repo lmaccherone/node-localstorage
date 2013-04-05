@@ -59,6 +59,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 0.3.2 - 2013-04-05 - Added support for '/' in keys by escaping before creating file names
 * 0.3.2 - 2013-01-19 - Renamed QuotaExceededError to QUOTA_EXCEEDED_ERR to match most browsers
 * 0.3.1 - 2013-01-19 - Fixed bug where it threw plain old Error instead of new QuotaExceededError
 * 0.3.0 - 2013-01-19 - Added QuotaExceededError support
