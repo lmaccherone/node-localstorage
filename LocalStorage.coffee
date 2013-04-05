@@ -32,7 +32,7 @@ class LocalStorage
         throw new Error("A file exists at the location '#{@location}' when trying to create/open localStorage")
     unless fs.existsSync(@location)
       fs.mkdirSync(@location)
-    @keys = fs.readdirSync(@location)
+    @keys = fs.readdirSync(@location).map(decodeURIComponent)
     @length = @keys.length
     @bytesInUse = 0
     for k in @keys
@@ -42,7 +42,7 @@ class LocalStorage
 
   setItem: (key, value) ->
     key = key.toString()
-    filename = path.join(@location, key)
+    filename = path.join(@location, encodeURIComponent(key))
     existsBeforeSet = fs.existsSync(filename)
     valueString = value.toString()
     valueStringLength = valueString.length
@@ -60,7 +60,7 @@ class LocalStorage
 
   getItem: (key) ->
     key = key.toString()
-    filename = path.join(@location, key)
+    filename = path.join(@location, encodeURIComponent(key))
     if fs.existsSync(filename)
       return fs.readFileSync(filename, 'utf8')
     else
@@ -68,7 +68,7 @@ class LocalStorage
   
   removeItem: (key) ->
     key = key.toString()
-    filename = path.join(@location, key)
+    filename = path.join(@location, encodeURIComponent(key))
     if fs.existsSync(filename)
       _rm(filename)
     @_init()  # !TODO: Find a faster way to set @keys, length, and bytesInUse
