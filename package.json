@@ -1,6 +1,6 @@
 {
   "name": "node-localstorage",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "main": "./LocalStorage",
   "description": "A drop-in substitute for the browser native localStorage API that runs on node.js.",
   "keywords": [
@@ -16,16 +16,14 @@
   "engines": {
     "node": "0.8.x"
   },
-  "dependencies": {
-    "coffee-script": "1.4.x"
-  },
   "repository": {
     "type" : "git",
     "url" : "http://github.com/lmaccherone/node-localstorage.git"
   },
   "preferGlobal": false,
   "devDependencies": {
-    "nodeunit": "0.7.x"
+    "nodeunit": "0.7.x",
+    "coffee-script": "1.4.x"
   },
   "scripts": {
     "test": "cake testall"
