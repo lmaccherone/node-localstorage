@@ -16,7 +16,7 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   * key(n)
   * clear()  
 * Serializes to disk in the location specified during instantiation
-* Supports the setting of a quota (default 5MB
+* Supports the setting of a quota (default 5MB)
 
 ### Unsupported ###
 
