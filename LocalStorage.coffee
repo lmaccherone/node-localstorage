@@ -23,6 +23,8 @@ class QUOTA_EXCEEDED_ERR extends Error
 class LocalStorage
 
   constructor: (@location, @quota = 5 * 1024 * 1024) ->
+    unless this instanceof LocalStorage
+      return new LocalStorage(@location, @quota)
     @length = 0  # !TODO: Maybe change this to a property with __defineProperty__
     @bytesInUse = 0
     @keys = []
