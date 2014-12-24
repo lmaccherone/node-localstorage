@@ -17,6 +17,9 @@ class QUOTA_EXCEEDED_ERR extends Error
       Error.captureStackTrace(this, @constructor)
     @name = @constructor.name
 
+  toString: () ->
+    return "#{@name}: #{@message}"
+
 class LocalStorage
 
   constructor: (@location, @quota = 5 * 1024 * 1024) ->
@@ -90,9 +93,6 @@ class LocalStorage
     @keys = []
     @length = 0
     @bytesInUse = 0
-
-toString: ->
-  return "#{@name}: #{@message}"
 
 exports.LocalStorage = LocalStorage
 exports.QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
