@@ -66,3 +66,8 @@ exports.LocalStorageTest =
 
     ls._deleteLocation()
     test.done()
+
+  testNoNewKeyword: (test) ->
+    local = LocalStorage('./scratch3')
+    local._deleteLocation()
+    test.done()
