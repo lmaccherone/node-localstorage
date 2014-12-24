@@ -27,15 +27,6 @@ task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   )
 )
 
-task('doctest', 'Runs doctests found in documentation', () ->
-  process.chdir(__dirname)
-  fs.readdir('./', (err, contents) ->
-    files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
-#     run('coffeedoc', ['-o', './docs', '-p', './package.json'].concat(files))  
-    run('coffeedoctest', ['--readme'].concat(files))
-  )
-)
-
 task('publish', 'Publish to npm', () ->
   process.chdir(__dirname)
   run('npm publish .')
@@ -51,7 +42,3 @@ task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
   )
 )
 
-task('testall', 'Runs both tests and doctests', () ->
-  invoke('test')
-  invoke('doctest')
-)

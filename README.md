@@ -59,7 +59,8 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
-* 0.3.5 - 2014-09-21 - Fixed toString() for QuotaExceededError
+* 0.3.6 - 2014-12-24 - Allows usage without `new`
+* 0.3.5 - 2014-12-23 - Fixed toString() for QuotaExceededError
 * 0.3.4 - 2013-07-07 - Moved CoffeeScript to devDependencies
 * 0.3.3 - 2013-04-05 - Added support for '/' in keys by escaping before creating file names
 * 0.3.2 - 2013-01-19 - Renamed QuotaExceededError to QUOTA_EXCEEDED_ERR to match most browsers

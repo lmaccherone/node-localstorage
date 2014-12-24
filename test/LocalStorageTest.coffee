@@ -69,5 +69,7 @@ exports.LocalStorageTest =
 
   testNoNewKeyword: (test) ->
     local = LocalStorage('./scratch3')
+    local.setItem('Hello', ' world!')
+    test.equals(local.getItem('Hello'), ' world!')
     local._deleteLocation()
     test.done()
