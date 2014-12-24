@@ -49,6 +49,9 @@
 
   LocalStorage = (function() {
     function LocalStorage(location, quota) {
+      if (! (this instanceof LocalStorage)) {
+        return new LocalStorage(location, quota);
+      }
       this.location = location;
       this.quota = quota != null ? quota : 5 * 1024 * 1024;
       this.length = 0;
