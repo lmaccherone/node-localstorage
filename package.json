@@ -22,16 +22,16 @@
   },
   "preferGlobal": false,
   "devDependencies": {
-    "nodeunit": "0.7.x",
-    "coffee-script": "1.4.x"
+    "coffee-script": "^1.8.0",
+    "nodeunit": "~0.9.0"
   },
   "scripts": {
     "test": "cake testall"
   },
   "licenses": [
      {
-         "type": "MIT",
-         "url": "http://www.opensource.org/licenses/MIT"
+       "type": "MIT",
+       "url": "http://www.opensource.org/licenses/MIT"
      }
    ]
 }
