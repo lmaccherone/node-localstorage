@@ -96,7 +96,7 @@
       valueString = value.toString();
       valueStringLength = valueString.length;
       if (existsBeforeSet) {
-        oldLength = this.getStat(key).length;
+        oldLength = this.getStat(key).size;
       } else {
         oldLength = 0;
       }
