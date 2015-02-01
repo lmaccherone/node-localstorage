@@ -52,7 +52,7 @@ class LocalStorage
     valueString = value.toString()
     valueStringLength = valueString.length
     if existsBeforeSet
-      oldLength = @getItem(key).length
+      oldLength = @getStat(key).size
     else
       oldLength = 0
     if @bytesInUse - oldLength + valueStringLength > @quota
@@ -74,7 +74,7 @@ class LocalStorage
     key = key.toString()
     filename = path.join(@location, encodeURIComponent(key))
     if fs.existsSync(filename)
-      return fs.statSync('Cakefile','utf8')
+      return fs.statSync(filename,'utf8')
     else
       return null
   removeItem: (key) ->

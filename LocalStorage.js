@@ -96,7 +96,7 @@
       valueString = value.toString();
       valueStringLength = valueString.length;
       if (existsBeforeSet) {
-        oldLength = this.getItem(key).length;
+        oldLength = this.getStat(key).length;
       } else {
         oldLength = 0;
       }
@@ -127,7 +127,7 @@
       key = key.toString();
       filename = path.join(this.location, encodeURIComponent(key));
       if (fs.existsSync(filename)) {
-        return fs.statSync('Cakefile', 'utf8');
+        return fs.statSync(filename, 'utf8');
       } else {
         return null;
       }
