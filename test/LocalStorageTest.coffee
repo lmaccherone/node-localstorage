@@ -73,3 +73,9 @@ exports.LocalStorageTest =
     test.equals(local.getItem('Hello'), ' world!')
     local._deleteLocation()
     test.done()
+
+  testNull: (test) ->
+    local = LocalStorage('./scratch4')
+    test.equals(local.getItem('junk'), null)
+    local._deleteLocation()
+    test.done()

@@ -70,6 +70,7 @@ class LocalStorage
       return fs.readFileSync(filename, 'utf8')
     else
       return null
+
   getStat: (key) ->
     key = key.toString()
     filename = path.join(@location, encodeURIComponent(key))
@@ -77,6 +78,7 @@ class LocalStorage
       return fs.statSync(filename,'utf8')
     else
       return null
+
   removeItem: (key) ->
     key = key.toString()
     filename = path.join(@location, encodeURIComponent(key))
@@ -102,5 +104,15 @@ class LocalStorage
     @length = 0
     @bytesInUse = 0
 
+class JSONStorage extends LocalStorage
+
+  setItem: (key, value) ->
+    newValue = JSON.stringify(value)
+    super(key, newValue)
+
+  getItem: (key) ->
+    return JSON.parse(super(key))
+
 exports.LocalStorage = LocalStorage
+exports.JSONStorage = JSONStorage
 exports.QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
