@@ -59,6 +59,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 0.4.1 - 2015-02-02 - More robust publishing/tagging (like Lumenize)
 * 0.4.0 - 2015-02-02 - Uses more efficient fs.statSync to set initial size (thanks, sudheer594)
 * 0.3.6 - 2014-12-24 - Allows usage without `new`
 * 0.3.5 - 2014-12-23 - Fixed toString() for QuotaExceededError
