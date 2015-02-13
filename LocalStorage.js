@@ -48,6 +48,8 @@
   })(Error);
 
   LocalStorage = (function() {
+    var MetaKey, createMap;
+
     function LocalStorage(_at_location, _at_quota) {
       this.location = _at_location;
       this.quota = _at_quota != null ? _at_quota : 5 * 1024 * 1024;
@@ -57,46 +59,71 @@
       this.length = 0;
       this.bytesInUse = 0;
       this.keys = [];
+      this.metaKeyMap = createMap();
       this._init();
       this.QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR;
     }
 
+    MetaKey = (function() {
+      function MetaKey(_at_key, _at_index) {
+        this.key = _at_key;
+        this.index = _at_index;
+        if (!(this instanceof MetaKey)) {
+          return new MetaKey(this.key, this.index);
+        }
+      }
+
+      return MetaKey;
+
+    })();
+
+    createMap = function() {
+      var Map;
+      Map = function() {};
+      Map.prototype = Object.create(null);
+      return new Map();
+    };
+
     LocalStorage.prototype._init = function() {
-      var k, value, _i, _len, _ref, _results;
+      var index, k, stat, _MetaKey, _decodedKey, _i, _keys, _len;
       if (fs.existsSync(this.location)) {
         if (!fs.statSync(this.location).isDirectory()) {
           throw new Error("A file exists at the location '" + this.location + "' when trying to create/open localStorage");
         }
       }
+      this.bytesInUse = 0;
+      this.length = 0;
       if (!fs.existsSync(this.location)) {
         fs.mkdirSync(this.location);
+        return;
       }
-      this.keys = fs.readdirSync(this.location).map(decodeURIComponent);
-      this.length = this.keys.length;
-      this.bytesInUse = 0;
-      _ref = this.keys;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        k = _ref[_i];
-        value = this.getStat(k);
-        if ((value != null ? value.size : void 0) != null) {
-          _results.push(this.bytesInUse += value.size);
-        } else {
-          _results.push(void 0);
+      _keys = fs.readdirSync(this.location);
+      for (index = _i = 0, _len = _keys.length; _i < _len; index = ++_i) {
+        k = _keys[index];
+        _decodedKey = decodeURIComponent(k);
+        this.keys.push(_decodedKey);
+        _MetaKey = new MetaKey(k, index);
+        this.metaKeyMap[_decodedKey] = _MetaKey;
+        stat = this.getStat(k);
+        if ((stat != null ? stat.size : void 0) != null) {
+          _MetaKey.size = stat.size;
+          this.bytesInUse += stat.size;
         }
       }
-      return _results;
+      return this.length = _keys.length;
     };
 
     LocalStorage.prototype.setItem = function(key, value) {
-      var existsBeforeSet, filename, oldLength, valueString, valueStringLength;
+      var encodedKey, existsBeforeSet, filename, metaKey, oldLength, valueString, valueStringLength;
       key = key.toString();
-      filename = path.join(this.location, encodeURIComponent(key));
-      existsBeforeSet = fs.existsSync(filename);
+      encodedKey = encodeURIComponent(key);
+      filename = path.join(this.location, encodedKey);
       valueString = value.toString();
       valueStringLength = valueString.length;
+      metaKey = this.metaKeyMap[key];
+      existsBeforeSet = !!metaKey;
       if (existsBeforeSet) {
-        oldLength = this.getStat(key).size;
+        oldLength = metaKey.size;
       } else {
         oldLength = 0;
       }
@@ -105,17 +132,21 @@
       }
       fs.writeFileSync(filename, valueString, 'utf8');
       if (!existsBeforeSet) {
-        this.keys.push(key);
-        this.length = this.keys.length;
+        metaKey = new MetaKey(encodedKey, (this.keys.push(key)) - 1);
+        metaKey.size = valueStringLength;
+        this.metaKeyMap[key] = metaKey;
+        this.length += 1;
         return this.bytesInUse += valueStringLength;
       }
     };
 
     LocalStorage.prototype.getItem = function(key) {
-      var filename;
+      var filename, metaKey;
       key = key.toString();
-      filename = path.join(this.location, encodeURIComponent(key));
-      if (fs.existsSync(filename)) {
+      console.log('keys' + this.length);
+      metaKey = this.metaKeyMap[key];
+      if (!!metaKey) {
+        filename = path.join(this.location, metaKey.key);
         return fs.readFileSync(filename, 'utf8');
       } else {
         return null;
@@ -127,20 +158,24 @@
       key = key.toString();
       filename = path.join(this.location, encodeURIComponent(key));
       if (fs.existsSync(filename)) {
-        return fs.statSync(filename, 'utf8');
+        return fs.statSync(filename);
       } else {
         return null;
       }
     };
 
     LocalStorage.prototype.removeItem = function(key) {
-      var filename;
+      var filename, metaKey;
       key = key.toString();
-      filename = path.join(this.location, encodeURIComponent(key));
-      if (fs.existsSync(filename)) {
-        _rm(filename);
+      metaKey = this.metaKeyMap[key];
+      if (!!metaKey) {
+        delete this.metaKeyMap[key];
+        this.length -= 1;
+        this.bytesInUse -= metaKey.size;
+        filename = path.join(this.location, metaKey.key);
+        this.keys.splice(metaKey.index, 1);
+        return _rm(filename);
       }
-      return this._init();
     };
 
     LocalStorage.prototype.key = function(n) {
@@ -149,6 +184,7 @@
 
     LocalStorage.prototype.clear = function() {
       _emptyDirectory(this.location);
+      this.metaKeyMap = createMap();
       this.keys = [];
       this.length = 0;
       return this.bytesInUse = 0;
@@ -160,6 +196,7 @@
 
     LocalStorage.prototype._deleteLocation = function() {
       _rm(this.location);
+      this.metaKeyMap = {};
       this.keys = [];
       this.length = 0;
       return this.bytesInUse = 0;
