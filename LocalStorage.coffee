@@ -23,7 +23,7 @@ class QUOTA_EXCEEDED_ERR extends Error
 
 
 class StorageEvent
-  constructor: (@key, @oldValue, @newValue, @url = '') ->
+  constructor: (@key, @oldValue, @newValue, @url, @storageArea = 'localStorage') ->
 
 
 class LocalStorage extends events.EventEmitter
@@ -35,6 +35,7 @@ class LocalStorage extends events.EventEmitter
     @bytesInUse = 0
     @keys = []
     @metaKeyMap = createMap()
+    @eventUrl = "pid:" + process.pid
     @_init()
     @QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
     
@@ -102,7 +103,7 @@ class LocalStorage extends events.EventEmitter
       @length += 1
       @bytesInUse += valueStringLength
     if hasListeners
-      evnt = new StorageEvent key, oldValue, value
+      evnt = new StorageEvent(key, oldValue, value, @eventUrl)
       this.emit('storage', evnt)
 
   getItem: (key) ->
@@ -138,8 +139,8 @@ class LocalStorage extends events.EventEmitter
       @keys.splice(metaKey.index,1)
       _rm(filename)
       if hasListeners
-        evnt = new StorageEvent key, oldValue, null
-        this.emit 'storage', evnt
+        evnt = new StorageEvent(key, oldValue, null, @eventUrl)
+        this.emit('storage', evnt)
     
   key: (n) ->
     return @keys[n]
@@ -150,6 +151,10 @@ class LocalStorage extends events.EventEmitter
     @keys = []
     @length = 0
     @bytesInUse = 0
+    if events.EventEmitter.listenerCount(this, 'storage')
+      evnt = new StorageEvent(null, null, null, @eventUrl)
+      this.emit('storage', evnt)
+
 
   getBytesInUse: () ->
     return @bytesInUse

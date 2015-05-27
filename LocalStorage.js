@@ -50,11 +50,12 @@
   })(Error);
 
   StorageEvent = (function() {
-    function StorageEvent(key1, oldValue1, newValue1, url) {
+    function StorageEvent(key1, oldValue1, newValue1, url, storageArea) {
       this.key = key1;
       this.oldValue = oldValue1;
       this.newValue = newValue1;
-      this.url = url != null ? url : '';
+      this.url = url;
+      this.storageArea = storageArea != null ? storageArea : 'localStorage';
     }
 
     return StorageEvent;
@@ -76,6 +77,7 @@
       this.bytesInUse = 0;
       this.keys = [];
       this.metaKeyMap = createMap();
+      this.eventUrl = "pid:" + process.pid;
       this._init();
       this.QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR;
     }
@@ -160,7 +162,7 @@
         this.bytesInUse += valueStringLength;
       }
       if (hasListeners) {
-        evnt = new StorageEvent(key, oldValue, value);
+        evnt = new StorageEvent(key, oldValue, value, this.eventUrl);
         return this.emit('storage', evnt);
       }
     };
@@ -206,7 +208,7 @@
         this.keys.splice(metaKey.index, 1);
         _rm(filename);
         if (hasListeners) {
-          evnt = new StorageEvent(key, oldValue, null);
+          evnt = new StorageEvent(key, oldValue, null, this.eventUrl);
           return this.emit('storage', evnt);
         }
       }
@@ -217,11 +219,16 @@
     };
 
     LocalStorage.prototype.clear = function() {
+      var evnt;
       _emptyDirectory(this.location);
       this.metaKeyMap = createMap();
       this.keys = [];
       this.length = 0;
-      return this.bytesInUse = 0;
+      this.bytesInUse = 0;
+      if (events.EventEmitter.listenerCount(this, 'storage')) {
+        evnt = new StorageEvent(null, null, null, this.eventUrl);
+        return this.emit('storage', evnt);
+      }
     };
 
     LocalStorage.prototype.getBytesInUse = function() {
