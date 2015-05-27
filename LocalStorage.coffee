@@ -1,5 +1,6 @@
 path = require('path')
 fs = require('fs')
+events = require('events')
 
 _emptyDirectory = (target) ->
   _rm(path.join(target, p)) for p in fs.readdirSync(target)
@@ -21,7 +22,11 @@ class QUOTA_EXCEEDED_ERR extends Error
     return "#{@name}: #{@message}"
 
 
-class LocalStorage
+class StorageEvent
+  constructor: (@key, @oldValue, @newValue, @url = '') ->
+
+
+class LocalStorage extends events.EventEmitter
 
   constructor: (@location, @quota = 5 * 1024 * 1024) ->
     unless this instanceof LocalStorage
@@ -72,6 +77,10 @@ class LocalStorage
     @length = _keys.length
     
   setItem: (key, value) ->
+    hasListeners = events.EventEmitter.listenerCount(this, 'storage')
+    oldValue = null
+    if hasListeners
+      oldValue = this.getItem(key)
     key = key.toString()
     encodedKey = encodeURIComponent(key)
     filename = path.join(@location, encodedKey)
@@ -92,6 +101,9 @@ class LocalStorage
       @metaKeyMap[key] = metaKey
       @length += 1
       @bytesInUse += valueStringLength
+    if hasListeners
+      evnt = new StorageEvent key, oldValue, value
+      this.emit('storage', evnt)
 
   getItem: (key) ->
     key = key.toString()
@@ -115,12 +127,19 @@ class LocalStorage
     key = key.toString()
     metaKey = @metaKeyMap[key]
     if (!!metaKey)
+      hasListeners = events.EventEmitter.listenerCount(this, 'storage')
+      oldValue = null
+      if hasListeners
+        oldValue = this.getItem(key)
       delete @metaKeyMap[key]
       @length -= 1
       @bytesInUse -= metaKey.size
       filename = path.join(@location, metaKey.key)
       @keys.splice(metaKey.index,1)
       _rm(filename)
+      if hasListeners
+        evnt = new StorageEvent key, oldValue, null
+        this.emit 'storage', evnt
     
   key: (n) ->
     return @keys[n]

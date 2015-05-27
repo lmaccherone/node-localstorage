@@ -27,7 +27,8 @@
     "nodeunit": "~0.9.0"
   },
   "scripts": {
-    "test": "cake test"
+    "test": "cake test",
+    "docompile": "cake compile"
   },
   "licenses": [
      {
