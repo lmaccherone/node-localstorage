@@ -1,6 +1,5 @@
 fs            = require('fs')
-{spawnSync, execSync, spawn} = require('child_process')
-gulpRun = require('gulp-run')  # !TODO: Switch away from spawnSync to gulp-run. For now only compile uses it.
+{execSync} = require('child_process')
 
 runSync = (command, options) ->
   stdout = runSyncRaw(command, options)
@@ -26,7 +25,7 @@ task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   fs.readdir('./', (err, contents) ->
     files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
     command = ['coffee ', '-c'].concat(files).join(' ')
-    gulpRun(command).exec()
+    runSync(command)
   )
 )
 
