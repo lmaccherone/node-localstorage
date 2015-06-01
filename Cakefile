@@ -1,13 +1,7 @@
 fs            = require('fs')
 {execSync} = require('child_process')
 
-runSync = (command, options) ->
-  stdout = runSyncRaw(command, options)
-  if stdout?.length > 0
-    console.log("Stdout running command '#{command}'...\n" + stdout)
-  return stdout
-
-runSyncNoExit = (command, options = []) ->
+runSync = (command, options = []) ->
   try
     stdout = runSyncRaw(command, options)
   catch error
