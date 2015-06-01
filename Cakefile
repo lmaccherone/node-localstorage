@@ -7,7 +7,16 @@ runSync = (command, options) ->
     console.log("Stdout running command '#{command}'...\n" + stdout)
   return stdout
 
-runSyncCatch = (command, options = []) ->
+runSyncNoExit = (command, options = []) ->
+  try
+    stdout = runSyncRaw(command, options)
+  catch error
+    console.log("Error running '#{command + ' ' + options.join(' ')}'...\n#{error}\n")
+    exit(1)
+  console.log("Output of running '#{command + ' ' + options.join(' ')}'...\n#{stdout}\n")
+  return {stderr: null, stdout}
+
+runSyncNoExit = (command, options = []) ->
   try
     stdout = runSyncRaw(command, options)
   catch error
