@@ -3,7 +3,7 @@ fs            = require('fs')
 
 runSync = (command) ->
   try
-    stdout = execSync(command, {encoding: 'utf8'})
+    stdout = execSync(command, {encoding: 'utf8', stdio: [null, null, 'ignore']})
   catch error
     console.log("Error running '#{command}'...\n#{error}\n")
     process.exit(1)
