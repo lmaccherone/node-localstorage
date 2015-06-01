@@ -1,15 +1,16 @@
 fs            = require('fs')
-runsync       = require('runsync')  # polyfil for node.js 0.12 synchronous running functionality. Remove when upgrading to 0.12
+spawnSync = require('child_process').spawnSync
+gulpRun = require('gulp-run')  # !TODO: Switch away from spawnSync to gulp-run. For now only compile uses it.
 
 runSync = (command, options, next) ->
   {stderr, stdout} = runSyncRaw(command, options)
-  if stderr.length > 0
+  if stderr?.length > 0
     console.error("Error running `#{command}`\n" + stderr)
     process.exit(1)
   if next?
     next(stdout)
   else
-    if stdout.length > 0
+    if stdout?.length > 0
       console.log("Stdout exec'ing command '#{command}'...\n" + stdout)
 
 runSyncNoExit = (command, options) ->
@@ -19,17 +20,19 @@ runSyncNoExit = (command, options) ->
 
 runSyncRaw = (command, options) ->
   if options? and options.length > 0
-    command += ' ' + options.join(' ')
-  output = runsync.popen(command)
-  stdout = output.stdout.toString()
-  stderr = output.stderr.toString()
+    command += ' ' + options.join(' ')  # !TODO: Not necessary with spanSync as it accepts an args array. Note, my use of "Options" is different from spawnSync's use of Options as its third parameter after args. Mine is like args.
+  console.log(command)
+  output = spawnSync(command)
+  stdout = output.stdout?.toString()
+  stderr = output.stderr?.toString()
   return {stderr, stdout}
 
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   process.chdir(__dirname)
   fs.readdir('./', (err, contents) ->
     files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
-    runSync('coffee', ['-c'].concat(files))
+    command = ['coffee ', '-c'].concat(files).join(' ')
+    gulpRun(command).exec()
   )
 )
 
@@ -51,7 +54,8 @@ task('publish', 'Publish to npm and add git tags', () ->
   runSync('cake compile')
   console.log('checking git status --porcelain')
   runSync('git status --porcelain', [], (stdout) ->
-    if stdout.length == 0
+#    if stdout.length == 0
+    unless stdout?
 
       console.log('checking origin/master')
       {stderr, stdout} = runSyncNoExit('git rev-parse origin/master')

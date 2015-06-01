@@ -108,7 +108,6 @@ class LocalStorage extends events.EventEmitter
 
   getItem: (key) ->
     key = key.toString()
-    console.log('keys' + @length)
     metaKey = @metaKeyMap[key]
     if !!metaKey
       filename = path.join(@location, metaKey.key)

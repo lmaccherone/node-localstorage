@@ -17,10 +17,16 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   * clear()  
 * Serializes to disk in the location specified during instantiation
 * Supports the setting of a quota (default 5MB)
+* Events. This doesn't exactly follow the spec which states that events are NOT supposed to be emitted to the browser window
+  that took the action that triggered the event in the first place. They are are only to be emitted to listners in
+  other browser windows. Early browser implementations actually did it this way and we don't really have the equivalent
+  of a browser window in node.js, so we choose to implement them in the current process. We did, however, include the pid
+  information in place of the window uri, so if we later wanted to say think of other node.js processes accessing
+  the same file system, we could actually implement it correctly. That would involve file watchers though and was more
+  than we wanted to implement for now. Maybe later.
 
 ### Unsupported ###
 
-* Events
 * Associative array syntax `localStorage['myKey'] = 'myValue'`
 
 ## Credits ##
@@ -59,6 +65,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 0.5.1 - 2015-06-01 - Added support for events
 * 0.5.0 - 2015-02-02 - Added JSONStorage class which allows you set and get native JSON
 * 0.4.1 - 2015-02-02 - More robust publishing/tagging (like Lumenize)
 * 0.4.0 - 2015-02-02 - Uses more efficient fs.statSync to set initial size (thanks, sudheer594)
