@@ -1,27 +1,14 @@
 fs            = require('fs')
 {execSync} = require('child_process')
 
-runSync = (command, options = []) ->
+runSync = (command) ->
   try
-    stdout = runSyncRaw(command, options)
+    stdout = execSync(command, {encoding: 'utf8'})
   catch error
-    console.log("Error running '#{command + ' ' + options.join(' ')}'...\n#{error}\n")
+    console.log("Error running '#{command}'...\n#{error}\n")
     process.exit(1)
-  console.log("Output of running '#{command + ' ' + options.join(' ')}'...\n#{stdout}\n")
+  console.log("Output of running '#{command }'...\n#{stdout}\n")
   return stdout
-
-runSyncNoExit = (command, options = []) ->
-  try
-    stdout = runSyncRaw(command, options)
-  catch error
-    console.log("Error running '#{command + ' ' + options.join(' ')}'...\n#{error}\n")
-    return {error, stdout}
-  console.log("Output of running '#{command + ' ' + options.join(' ')}'...\n#{stdout}\n")
-  return {stderr: null, stdout}
-
-runSyncRaw = (command, options) ->
-  stdout = execSync(command, options)
-  return stdout.toString()
 
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   process.chdir(__dirname)
