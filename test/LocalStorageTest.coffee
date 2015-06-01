@@ -79,3 +79,51 @@ exports.LocalStorageTest =
     test.equals(local.getItem('junk'), null)
     local._deleteLocation()
     test.done()
+
+  testEvents: (test) ->
+    localStorage = new LocalStorage('./scratch5')
+
+    expectedUrl = "pid:" + process.pid
+    key = null; oldVal = null; newVal = null; url = null
+    handleEvent = (evnt) ->
+      key = evnt.key
+      oldVal = evnt.oldValue
+      newVal = evnt.newValue
+      url = evnt.url
+
+    localStorage.on('storage', handleEvent)
+    
+    localStorage.setItem('a', 'something')
+    test.equal(localStorage.getItem('a'), 'something')
+    test.equal(key, 'a')
+    test.equal(oldVal, null)
+    test.equal(newVal, 'something')
+    test.equal(url, expectedUrl)
+
+    key = null; oldVal = null; newVal = null; url = null
+    localStorage.setItem('a', 'somethingnew')
+    test.equal(localStorage.getItem('a'), 'somethingnew')
+    test.equal(key, 'a')
+    test.equal(oldVal, 'something')
+    test.equal(newVal, 'somethingnew')
+    test.equal(url, expectedUrl)
+    
+    key = null; oldVal = null; newVal = null; url = null
+    localStorage.removeItem('a')
+    test.equal(localStorage.getItem('a'), null)
+    test.equal(key, 'a')
+    test.equal(oldVal, 'somethingnew')
+    test.equal(newVal, null)
+    test.equal(url, expectedUrl)
+
+    key = null; oldVal = null; newVal = null; url = null
+    localStorage.clear();
+    test.equal(localStorage.getItem('a'), null)
+    test.equal(key, null)
+    test.equal(oldVal, null)
+    test.equal(newVal, null)
+    test.equal(url, expectedUrl)
+    
+    localStorage._deleteLocation()
+    test.done()
+

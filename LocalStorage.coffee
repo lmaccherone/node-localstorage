@@ -1,5 +1,6 @@
 path = require('path')
 fs = require('fs')
+events = require('events')
 
 _emptyDirectory = (target) ->
   _rm(path.join(target, p)) for p in fs.readdirSync(target)
@@ -21,7 +22,11 @@ class QUOTA_EXCEEDED_ERR extends Error
     return "#{@name}: #{@message}"
 
 
-class LocalStorage
+class StorageEvent
+  constructor: (@key, @oldValue, @newValue, @url, @storageArea = 'localStorage') ->
+
+
+class LocalStorage extends events.EventEmitter
 
   constructor: (@location, @quota = 5 * 1024 * 1024) ->
     unless this instanceof LocalStorage
@@ -30,6 +35,7 @@ class LocalStorage
     @bytesInUse = 0
     @keys = []
     @metaKeyMap = createMap()
+    @eventUrl = "pid:" + process.pid
     @_init()
     @QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
     
@@ -72,6 +78,10 @@ class LocalStorage
     @length = _keys.length
     
   setItem: (key, value) ->
+    hasListeners = events.EventEmitter.listenerCount(this, 'storage')
+    oldValue = null
+    if hasListeners
+      oldValue = this.getItem(key)
     key = key.toString()
     encodedKey = encodeURIComponent(key)
     filename = path.join(@location, encodedKey)
@@ -92,6 +102,9 @@ class LocalStorage
       @metaKeyMap[key] = metaKey
       @length += 1
       @bytesInUse += valueStringLength
+    if hasListeners
+      evnt = new StorageEvent(key, oldValue, value, @eventUrl)
+      this.emit('storage', evnt)
 
   getItem: (key) ->
     key = key.toString()
@@ -115,12 +128,19 @@ class LocalStorage
     key = key.toString()
     metaKey = @metaKeyMap[key]
     if (!!metaKey)
+      hasListeners = events.EventEmitter.listenerCount(this, 'storage')
+      oldValue = null
+      if hasListeners
+        oldValue = this.getItem(key)
       delete @metaKeyMap[key]
       @length -= 1
       @bytesInUse -= metaKey.size
       filename = path.join(@location, metaKey.key)
       @keys.splice(metaKey.index,1)
       _rm(filename)
+      if hasListeners
+        evnt = new StorageEvent(key, oldValue, null, @eventUrl)
+        this.emit('storage', evnt)
     
   key: (n) ->
     return @keys[n]
@@ -131,6 +151,10 @@ class LocalStorage
     @keys = []
     @length = 0
     @bytesInUse = 0
+    if events.EventEmitter.listenerCount(this, 'storage')
+      evnt = new StorageEvent(null, null, null, @eventUrl)
+      this.emit('storage', evnt)
+
 
   getBytesInUse: () ->
     return @bytesInUse
