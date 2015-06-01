@@ -47,8 +47,7 @@ task('publish', 'Publish to npm and add git tags', () ->
   runSync('cake compile')
   console.log('checking git status --porcelain')
   stdout = runSync('git status --porcelain', [])
-#    if stdout.length == 0
-  if stdout?
+  if stdout.length > 0
     console.error('`git status --porcelain` was not clean. Not publishing.')
   else
     console.log('checking origin/master')
