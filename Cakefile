@@ -1,31 +1,25 @@
 fs            = require('fs')
-spawnSync = require('child_process').spawnSync
+{spawnSync, execSync, spawn} = require('child_process')
 gulpRun = require('gulp-run')  # !TODO: Switch away from spawnSync to gulp-run. For now only compile uses it.
 
-runSync = (command, options, next) ->
-  {stderr, stdout} = runSyncRaw(command, options)
-  if stderr?.length > 0
-    console.error("Error running `#{command}`\n" + stderr)
-    process.exit(1)
-  if next?
-    next(stdout)
-  else
-    if stdout?.length > 0
-      console.log("Stdout exec'ing command '#{command}'...\n" + stdout)
+runSync = (command, options) ->
+  stdout = runSyncRaw(command, options)
+  if stdout?.length > 0
+    console.log("Stdout running command '#{command}'...\n" + stdout)
+  return stdout
 
-runSyncNoExit = (command, options) ->
-  {stderr, stdout} = runSyncRaw(command, options)
-  console.log("Output of running '#{command}'...\n#{stderr}\n#{stdout}\n")
-  return {stderr, stdout}
+runSyncCatch = (command, options = []) ->
+  try
+    stdout = runSyncRaw(command, options)
+  catch error
+    console.log("Error running '#{command + ' ' + options.join(' ')}'...\n#{error}\n")
+    return {error, stdout}
+  console.log("Output of running '#{command + ' ' + options.join(' ')}'...\n#{stdout}\n")
+  return {stderr: null, stdout}
 
 runSyncRaw = (command, options) ->
-  if options? and options.length > 0
-    command += ' ' + options.join(' ')  # !TODO: Not necessary with spanSync as it accepts an args array. Note, my use of "Options" is different from spawnSync's use of Options as its third parameter after args. Mine is like args.
-  console.log(command)
-  output = spawnSync(command)
-  stdout = output.stdout?.toString()
-  stderr = output.stderr?.toString()
-  return {stderr, stdout}
+  stdout = execSync(command, options)
+  return stdout.toString()
 
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   process.chdir(__dirname)
@@ -53,34 +47,33 @@ task('publish', 'Publish to npm and add git tags', () ->
   process.chdir(__dirname)
   runSync('cake compile')
   console.log('checking git status --porcelain')
-  runSync('git status --porcelain', [], (stdout) ->
+  stdout = runSync('git status --porcelain', [])
 #    if stdout.length == 0
-    unless stdout?
+  if stdout?
+    console.error('`git status --porcelain` was not clean. Not publishing.')
+  else
+    console.log('checking origin/master')
+    stdout = runSync('git rev-parse origin/master')
 
-      console.log('checking origin/master')
-      {stderr, stdout} = runSyncNoExit('git rev-parse origin/master')
+    console.log('checking master')
+    stdoutOrigin = stdout
+    stdout = runSync('git rev-parse master')
+    stdoutMaster = stdout
 
-      console.log('checking master')
-      stdoutOrigin = stdout
-      {stderr, stdout} = runSyncNoExit('git rev-parse master')
-      stdoutMaster = stdout
+    if stdoutOrigin == stdoutMaster
 
-      if stdoutOrigin == stdoutMaster
+      console.log('running npm publish')
+      runSync('npm publish .')
 
-        console.log('running npm publish')
-        runSyncNoExit('npm publish .')
-
-        if fs.existsSync('npm-debug.log')
-          console.error('`npm publish` failed. See npm-debug.log for details.')
-        else
-
-          console.log('creating git tag')
-          runSyncNoExit("git tag v#{require('./package.json').version}")
-          runSyncNoExit("git push --tags")
+      if fs.existsSync('npm-debug.log')
+        console.error('`npm publish` failed. See npm-debug.log for details.')
       else
-        console.error('Origin and master out of sync. Not publishing.')
+
+        console.log('creating git tag')
+        runSync("git tag v#{require('./package.json').version}")
+        runSync("git push --tags")
     else
-      console.error('`git status --porcelain` was not clean. Not publishing.')
-  )
+      console.error('Origin and master out of sync. Not publishing.')
 )
+
 
