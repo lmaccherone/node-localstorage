@@ -6,7 +6,7 @@ runSync = (command, options = []) ->
     stdout = runSyncRaw(command, options)
   catch error
     console.log("Error running '#{command + ' ' + options.join(' ')}'...\n#{error}\n")
-    exit(1)
+    process.exit(1)
   console.log("Output of running '#{command + ' ' + options.join(' ')}'...\n#{stdout}\n")
   return stdout
 
