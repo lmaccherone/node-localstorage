@@ -8,7 +8,7 @@ runSync = (command, options = []) ->
     console.log("Error running '#{command + ' ' + options.join(' ')}'...\n#{error}\n")
     exit(1)
   console.log("Output of running '#{command + ' ' + options.join(' ')}'...\n#{stdout}\n")
-  return {stderr: null, stdout}
+  return stdout
 
 runSyncNoExit = (command, options = []) ->
   try
