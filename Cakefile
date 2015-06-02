@@ -2,12 +2,10 @@ fs            = require('fs')
 {execSync} = require('child_process')
 
 runSync = (command) ->
-  catchBuffer = new Buffer(2000)
   try
-    stdout = execSync(command, {encoding: 'utf8', stdio: [null, null, catchBuffer]})
+    stdout = execSync(command, {encoding: 'utf8'})
   catch error
     console.log("Error running '#{command}'...\n#{error}\n")
-    console.log(catchBuffer.toString())
     process.exit(1)
   console.log("Output of running '#{command }'...\n#{stdout}\n")
   return stdout
