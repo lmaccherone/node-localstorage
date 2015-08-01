@@ -136,6 +136,10 @@ class LocalStorage extends events.EventEmitter
       @bytesInUse -= metaKey.size
       filename = path.join(@location, metaKey.key)
       @keys.splice(metaKey.index,1)
+      for k,v of @metaKeyMap
+        meta = @metaKeyMap[k]
+        if meta.index > metaKey.index
+          meta.index -= 1
       _rm(filename)
       if hasListeners
         evnt = new StorageEvent(key, oldValue, null, @eventUrl)
