@@ -2,8 +2,8 @@ fs            = require('fs')
 {execSync, spawnSync} = require('child_process')
 
 isWindows = (process.platform.lastIndexOf('win') == 0)
-
-runSync = (command) ->  # !TODO: Upgrade to spawn a shell so we can run gsutil like https://github.com/cbarrick/gulp-run/blob/master/lib/command.js
+runSync = (command) ->
+  # Spawn things in a sub-shell so things like io redirection and gsutil work
   if isWindows
     shell = 'cmd.exe'
     args = ['/c', command]

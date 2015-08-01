@@ -80,6 +80,25 @@ exports.LocalStorageTest =
     local._deleteLocation()
     test.done()
 
+  testRemoveKeys: (test) ->
+    localStorage = new LocalStorage('./scratch6');
+
+    localStorage.setItem('a', 'hello')
+    localStorage.setItem('b', 'hello')
+    localStorage.setItem('c', 'hello')
+    localStorage.setItem('d', 'hello')
+
+    test.deepEqual(localStorage.keys, ['a', 'b', 'c', 'd'])
+    localStorage.removeItem('c')
+    test.deepEqual(localStorage.keys, ['a', 'b', 'd'])
+    localStorage.removeItem('a');
+    test.deepEqual(localStorage.keys, ['b', 'd'])
+    localStorage.removeItem('b')
+    test.deepEqual(localStorage.keys, ['d'])
+    localStorage.removeItem('d')
+    test.deepEqual(localStorage.keys, [])
+    test.done()
+
   testEvents: (test) ->
     localStorage = new LocalStorage('./scratch5')
 
