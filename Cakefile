@@ -65,7 +65,7 @@ task('publish', 'Publish to npm and add git tags', () ->
         stat = fs.statSync('npm-debug.log')
         console.error('`npm publish` failed. See npm-debug.log for details.')
         process.exit(1)
-        
+
       console.log('creating git tag')
       runSync("git tag v#{require('./package.json').version}")
       runSync("git push --tags")
