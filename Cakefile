@@ -61,13 +61,14 @@ task('publish', 'Publish to npm and add git tags', () ->
       console.log('running npm publish')
       runSync('npm publish .')
 
-      if fs.existsSync('npm-debug.log')
+      try
+        stat = fs.statSync('npm-debug.log')
         console.error('`npm publish` failed. See npm-debug.log for details.')
-      else
-
-        console.log('creating git tag')
-        runSync("git tag v#{require('./package.json').version}")
-        runSync("git push --tags")
+        process.exit(1)
+        
+      console.log('creating git tag')
+      runSync("git tag v#{require('./package.json').version}")
+      runSync("git push --tags")
     else
       console.error('Origin and master out of sync. Not publishing.')
 )
