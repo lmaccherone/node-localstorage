@@ -146,3 +146,16 @@ exports.LocalStorageTest =
     localStorage._deleteLocation()
     test.done()
 
+  testGetStat: (test) ->
+    localStorage = new LocalStorage('./scratch7')
+
+    o = {a:1, b:'some string', c:{x: 1, y: 2}}
+    localStorage.setItem('stat', o)
+    test.deepEqual(localStorage.getItem('stat'), o.toString())
+
+    test.ok(localStorage.getStat('stat')?)
+    test.equal(localStorage.getStat('not there'), null)
+
+    localStorage._deleteLocation()
+    test.done()
+

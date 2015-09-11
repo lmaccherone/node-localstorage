@@ -1,5 +1,6 @@
 .DS_Store
 scratch
-js
 node_modules
 .idea
+*.js
+*.map

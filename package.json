@@ -27,7 +27,8 @@
   },
   "scripts": {
     "test": "cake test",
-    "docompile": "cake compile"
+    "docompile": "cake compile",
+    "prepublish": "cake compile"
   },
   "licenses": [
     {

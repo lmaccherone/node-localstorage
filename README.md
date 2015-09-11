@@ -1,4 +1,5 @@
 [![build status](https://secure.travis-ci.org/lmaccherone/node-localstorage.png)](http://travis-ci.org/lmaccherone/node-localstorage)
+[![bitHound Score](https://www.bithound.io/github/lmaccherone/node-localstorage/badges/score.svg)](https://www.bithound.io/github/lmaccherone/node-localstorage)
 # node-localstorage #
 
 Copyright (c) 2012, Lawrence S. Maccherone, Jr.

@@ -54,28 +54,33 @@ class LocalStorage extends events.EventEmitter
 
   
   _init: () ->
-    if fs.existsSync(@location)
-      unless fs.statSync(@location).isDirectory()
+    try
+      stat = fs.statSync(@location)
+      if stat? and not stat.isDirectory()
         throw new Error("A file exists at the location '#{@location}' when trying to create/open localStorage")
+      # At this point, it exists and is definitely a directory. So read it.
+      @bytesInUse = 0
+      @length = 0
 
-    @bytesInUse = 0
-    @length = 0
-    unless fs.existsSync(@location)
+      _keys = fs.readdirSync(@location)
+      for k, index in _keys
+        _decodedKey = decodeURIComponent(k)
+        @keys.push(_decodedKey)
+        _MetaKey = new MetaKey k,index
+        @metaKeyMap[_decodedKey] = _MetaKey
+        stat = @getStat(k)
+        if stat?.size?
+          _MetaKey.size = stat.size
+          @bytesInUse += stat.size
+
+      @length = _keys.length
+      return
+    catch
+      # If it errors, that means it didn't exist, so create it
       fs.mkdirSync(@location)
-      return #if it is a new directory , no need to read directory to populate keys
+      return
 
-    _keys = fs.readdirSync(@location)
-    for k, index in _keys
-      _decodedKey = decodeURIComponent(k)
-      @keys.push(_decodedKey)
-      _MetaKey = new MetaKey k,index
-      @metaKeyMap[_decodedKey] = _MetaKey
-      stat = @getStat(k)
-      if stat?.size?
-        _MetaKey.size = stat.size
-        @bytesInUse += stat.size
 
-    @length = _keys.length
     
   setItem: (key, value) ->
     hasListeners = events.EventEmitter.listenerCount(this, 'storage')
@@ -118,9 +123,9 @@ class LocalStorage extends events.EventEmitter
   getStat: (key) ->
     key = key.toString()
     filename = path.join(@location, encodeURIComponent(key))
-    if fs.existsSync(filename)
+    try
       return fs.statSync(filename)
-    else
+    catch
       return null
 
   removeItem: (key) ->
