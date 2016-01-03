@@ -66,6 +66,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 1.0.0 - 2016-01-03 - Fixed bug with empty string key (thanks, tinybike)
 * 0.6.0 - 2015-09-11 - Removed references to deprecated fs.existsSync() (thanks, josephbosire)
 * 0.5.2 - 2015-08-01 - Fixed defect where keys were not being updated correctly by removeItem() (thanks, ed69140)
 * 0.5.1 - 2015-06-01 - Added support for events

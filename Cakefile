@@ -1,5 +1,7 @@
-fs            = require('fs')
-{execSync, spawnSync} = require('child_process')
+fs = require('fs')
+spawnSync = require('child_process').spawnSync
+path = require('path')
+_ = require('lodash')
 
 isWindows = (process.platform.lastIndexOf('win') == 0)
 runSync = (command) ->
@@ -17,6 +19,15 @@ runSync = (command) ->
   else
     console.log("Output of running '#{command}'\n#{stdout}\n")
     return stdout
+
+task('clean', 'Deletes .js and .map files', () ->
+  folders = ['.']
+  for folder in folders
+    pathToClean = path.join(__dirname, folder)
+    contents = fs.readdirSync(pathToClean)
+    for file in contents when (_.endsWith(file, '.js') or _.endsWith(file, '.map'))
+      fs.unlinkSync(path.join(pathToClean, file))
+)
 
 task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
   process.chdir(__dirname)
@@ -36,7 +47,6 @@ task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
       process.exit(1)
   )
 )
-
 
 task('publish', 'Publish to npm and add git tags', () ->
   process.chdir(__dirname)
@@ -69,6 +79,7 @@ task('publish', 'Publish to npm and add git tags', () ->
       console.log('creating git tag')
       runSync("git tag v#{require('./package.json').version}")
       runSync("git push --tags")
+      runSync("cake clean")
     else
       console.error('Origin and master out of sync. Not publishing.')
 )

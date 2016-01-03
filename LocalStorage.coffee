@@ -2,6 +2,8 @@ path = require('path')
 fs = require('fs')
 events = require('events')
 
+KEY_FOR_EMPTY_STRING = '---.EMPTY_STRING.---'  # Chose something that no one is likely to ever use
+
 _emptyDirectory = (target) ->
   _rm(path.join(target, p)) for p in fs.readdirSync(target)
 
@@ -11,6 +13,13 @@ _rm = (target) ->
     fs.rmdirSync(target)
   else
     fs.unlinkSync(target)
+
+_escapeKey = (key) ->
+  if key is ''
+    newKey = KEY_FOR_EMPTY_STRING
+  else
+    newKey = key.toString()
+  return newKey
 
 class QUOTA_EXCEEDED_ERR extends Error
   constructor: (@message = 'Unknown error.') ->
@@ -44,14 +53,12 @@ class LocalStorage extends events.EventEmitter
     constructor: (@key,@index) ->
       unless this instanceof MetaKey
         return new MetaKey(@key,@index)
-    
-  
-  createMap = -> #createMap contains Metakeys as properties
+
+  createMap = -> # createMap contains Metakeys as properties
     Map = ->
       return
     Map.prototype = Object.create(null);
     return new Map()
-
   
   _init: () ->
     try
@@ -79,15 +86,13 @@ class LocalStorage extends events.EventEmitter
       # If it errors, that means it didn't exist, so create it
       fs.mkdirSync(@location)
       return
-
-
     
   setItem: (key, value) ->
     hasListeners = events.EventEmitter.listenerCount(this, 'storage')
     oldValue = null
     if hasListeners
       oldValue = this.getItem(key)
-    key = key.toString()
+    key = _escapeKey(key)
     encodedKey = encodeURIComponent(key)
     filename = path.join(@location, encodedKey)
     valueString = value.toString()  
@@ -112,7 +117,7 @@ class LocalStorage extends events.EventEmitter
       this.emit('storage', evnt)
 
   getItem: (key) ->
-    key = key.toString()
+    key = _escapeKey(key)
     metaKey = @metaKeyMap[key]
     if !!metaKey
       filename = path.join(@location, metaKey.key)
@@ -121,7 +126,7 @@ class LocalStorage extends events.EventEmitter
       return null
 
   getStat: (key) ->
-    key = key.toString()
+    key = _escapeKey(key)
     filename = path.join(@location, encodeURIComponent(key))
     try
       return fs.statSync(filename)
@@ -129,7 +134,7 @@ class LocalStorage extends events.EventEmitter
       return null
 
   removeItem: (key) ->
-    key = key.toString()
+    key = _escapeKey(key)
     metaKey = @metaKeyMap[key]
     if (!!metaKey)
       hasListeners = events.EventEmitter.listenerCount(this, 'storage')
@@ -162,7 +167,6 @@ class LocalStorage extends events.EventEmitter
     if events.EventEmitter.listenerCount(this, 'storage')
       evnt = new StorageEvent(null, null, null, @eventUrl)
       this.emit('storage', evnt)
-
 
   getBytesInUse: () ->
     return @bytesInUse

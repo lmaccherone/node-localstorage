@@ -159,3 +159,12 @@ exports.LocalStorageTest =
     localStorage._deleteLocation()
     test.done()
 
+  testEmptyString: (test) ->
+    localStorage = new LocalStorage('./scratch8')
+
+    localStorage.setItem('', 'something')
+    test.equal(localStorage.getItem(''), 'something')
+
+    localStorage._deleteLocation()
+    test.done()
+
