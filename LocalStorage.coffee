@@ -34,57 +34,77 @@ class QUOTA_EXCEEDED_ERR extends Error
 class StorageEvent
   constructor: (@key, @oldValue, @newValue, @url, @storageArea = 'localStorage') ->
 
+class MetaKey # MetaKey contains key and size
+  constructor: (@key, @index) ->
+    unless this instanceof MetaKey
+      return new MetaKey(@key, @index)
+
+createMap = -> # createMap contains Metakeys as properties
+  Map = ->
+    return
+  Map.prototype = Object.create(null);
+  return new Map()
+
 
 class LocalStorage extends events.EventEmitter
 
-  constructor: (@location, @quota = 5 * 1024 * 1024) ->
+  constructor: (@_location, @quota = 5 * 1024 * 1024) ->
     unless this instanceof LocalStorage
-      return new LocalStorage(@location, @quota)
+      return new LocalStorage(@_location, @quota)
     @length = 0  # !TODO: Maybe change this to a property with __defineProperty__
-    @bytesInUse = 0
-    @keys = []
-    @metaKeyMap = createMap()
-    @eventUrl = "pid:" + process.pid
+    @_bytesInUse = 0
+    @_keys = []
+    @_metaKeyMap = createMap()
+    @_eventUrl = "pid:" + process.pid
     @_init()
-    @QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
-    
+    @_QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
 
-  class MetaKey # MetaKey contains key and size
-    constructor: (@key,@index) ->
-      unless this instanceof MetaKey
-        return new MetaKey(@key,@index)
+    if Proxy?
+      reserved = ["length", "setItem", "getItem", "removeItem", "key", "clear", "_deleteLocation", "_location", 
+        "_metaKeyMap", "_keys", "_bytesInUse", "_init", "_eventUrl", "_QUOTA_EXCEEDED_ERR"]
 
-  createMap = -> # createMap contains Metakeys as properties
-    Map = ->
-      return
-    Map.prototype = Object.create(null);
-    return new Map()
+      handler =
+        set: (receiver, key, value) =>
+          if key in reserved
+            return @[key]
+          else
+            @setItem(key, value)
+
+        get: (receiver, key) =>
+          if key in reserved
+            return @[key]
+          else
+            return @getItem(key)
+
+      return Proxy.create(handler, this)
+
+    # else it'll return this
   
   _init: () ->
     try
-      stat = fs.statSync(@location)
+      stat = fs.statSync(@_location)
       if stat? and not stat.isDirectory()
-        throw new Error("A file exists at the location '#{@location}' when trying to create/open localStorage")
+        throw new Error("A file exists at the location '#{@_location}' when trying to create/open localStorage")
       # At this point, it exists and is definitely a directory. So read it.
-      @bytesInUse = 0
+      @_bytesInUse = 0
       @length = 0
 
-      _keys = fs.readdirSync(@location)
+      _keys = fs.readdirSync(@_location)
       for k, index in _keys
         _decodedKey = decodeURIComponent(k)
-        @keys.push(_decodedKey)
-        _MetaKey = new MetaKey k,index
-        @metaKeyMap[_decodedKey] = _MetaKey
-        stat = @getStat(k)
+        @_keys.push(_decodedKey)
+        _MetaKey = new MetaKey(k, index)
+        @_metaKeyMap[_decodedKey] = _MetaKey
+        stat = @_getStat(k)
         if stat?.size?
           _MetaKey.size = stat.size
-          @bytesInUse += stat.size
+          @_bytesInUse += stat.size
 
       @length = _keys.length
       return
     catch
       # If it errors, that means it didn't exist, so create it
-      fs.mkdirSync(@location)
+      fs.mkdirSync(@_location)
       return
     
   setItem: (key, value) ->
@@ -94,40 +114,40 @@ class LocalStorage extends events.EventEmitter
       oldValue = this.getItem(key)
     key = _escapeKey(key)
     encodedKey = encodeURIComponent(key)
-    filename = path.join(@location, encodedKey)
+    filename = path.join(@_location, encodedKey)
     valueString = value.toString()  
     valueStringLength = valueString.length
-    metaKey = @metaKeyMap[key]
+    metaKey = @_metaKeyMap[key]
     existsBeforeSet = !!metaKey
     if existsBeforeSet
       oldLength = metaKey.size
     else
       oldLength = 0
-    if @bytesInUse - oldLength + valueStringLength > @quota
+    if @_bytesInUse - oldLength + valueStringLength > @quota
       throw new QUOTA_EXCEEDED_ERR()
     fs.writeFileSync(filename, valueString, 'utf8')
     unless existsBeforeSet
-      metaKey = new MetaKey encodedKey,(@keys.push(key))-1
+      metaKey = new MetaKey(encodedKey, (@_keys.push(key)) - 1)
       metaKey.size = valueStringLength
-      @metaKeyMap[key] = metaKey
+      @_metaKeyMap[key] = metaKey
       @length += 1
-      @bytesInUse += valueStringLength
+      @_bytesInUse += valueStringLength
     if hasListeners
-      evnt = new StorageEvent(key, oldValue, value, @eventUrl)
+      evnt = new StorageEvent(key, oldValue, value, @_eventUrl)
       this.emit('storage', evnt)
 
   getItem: (key) ->
     key = _escapeKey(key)
-    metaKey = @metaKeyMap[key]
+    metaKey = @_metaKeyMap[key]
     if !!metaKey
-      filename = path.join(@location, metaKey.key)
+      filename = path.join(@_location, metaKey.key)
       return fs.readFileSync(filename, 'utf8')
     else
       return null
 
-  getStat: (key) ->
+  _getStat: (key) ->
     key = _escapeKey(key)
-    filename = path.join(@location, encodeURIComponent(key))
+    filename = path.join(@_location, encodeURIComponent(key))
     try
       return fs.statSync(filename)
     catch
@@ -135,48 +155,48 @@ class LocalStorage extends events.EventEmitter
 
   removeItem: (key) ->
     key = _escapeKey(key)
-    metaKey = @metaKeyMap[key]
+    metaKey = @_metaKeyMap[key]
     if (!!metaKey)
       hasListeners = events.EventEmitter.listenerCount(this, 'storage')
       oldValue = null
       if hasListeners
         oldValue = this.getItem(key)
-      delete @metaKeyMap[key]
+      delete @_metaKeyMap[key]
       @length -= 1
-      @bytesInUse -= metaKey.size
-      filename = path.join(@location, metaKey.key)
-      @keys.splice(metaKey.index,1)
-      for k,v of @metaKeyMap
-        meta = @metaKeyMap[k]
+      @_bytesInUse -= metaKey.size
+      filename = path.join(@_location, metaKey.key)
+      @_keys.splice(metaKey.index,1)
+      for k,v of @_metaKeyMap
+        meta = @_metaKeyMap[k]
         if meta.index > metaKey.index
           meta.index -= 1
       _rm(filename)
       if hasListeners
-        evnt = new StorageEvent(key, oldValue, null, @eventUrl)
+        evnt = new StorageEvent(key, oldValue, null, @_eventUrl)
         this.emit('storage', evnt)
     
   key: (n) ->
-    return @keys[n]
+    return @_keys[n]
     
   clear: () ->
-    _emptyDirectory(@location)
-    @metaKeyMap = createMap()
-    @keys = []
+    _emptyDirectory(@_location)
+    @_metaKeyMap = createMap()
+    @_keys = []
     @length = 0
-    @bytesInUse = 0
+    @_bytesInUse = 0
     if events.EventEmitter.listenerCount(this, 'storage')
-      evnt = new StorageEvent(null, null, null, @eventUrl)
+      evnt = new StorageEvent(null, null, null, @_eventUrl)
       this.emit('storage', evnt)
 
-  getBytesInUse: () ->
-    return @bytesInUse
+  _getBytesInUse: () ->
+    return @_bytesInUse
     
   _deleteLocation: () ->
-    _rm(@location)
-    @metaKeyMap = {}
-    @keys = []
+    _rm(@_location)
+    @_metaKeyMap = {}
+    @_keys = []
     @length = 0
-    @bytesInUse = 0
+    @_bytesInUse = 0
 
 class JSONStorage extends LocalStorage
 

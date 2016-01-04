@@ -1,6 +1,3 @@
-# This now works on at least npm v5.x, but still requires harmony-proxies flag
-# To run `coffee --nodejs --harmony-proxies .play/es6Proxy.coffee`
-
 class ObjectLike
   constructor: (obj) ->
     unless obj?
@@ -16,6 +13,10 @@ class ObjectLike
 
     return Proxy.create(interceptor, @dummy)
 
-a = new ObjectLike()
-a['something long'] = 10
-console.log(a['something long'])
+exports.es6ProxyTest =
+
+  theTest: (test) ->
+    a = new ObjectLike()
+    a['something long'] = 10
+    test.equal(a['something long'], 11)
+    test.done()

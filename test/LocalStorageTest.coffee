@@ -11,7 +11,7 @@ exports.LocalStorageTest =
   testLocalStorage: (test) ->
     localStorage = new LocalStorage('./scratch')
 
-    test.equal(localStorage.location, './scratch')
+    test.equal(localStorage._location, './scratch')
     
     
     localStorage.setItem('/', 'something')
@@ -24,13 +24,13 @@ exports.LocalStorageTest =
     localStorage.setItem('2', a)
     test.deepEqual(localStorage.getItem('2'), a.toString())
     
-    test.deepEqual(localStorage.keys, ['/', '2'])
+    test.deepEqual(localStorage._keys, ['/', '2'])
     test.equal(localStorage.length, 2)
 
     localStorage.removeItem('2')
     test.equal(localStorage.getItem('2'), null)
     
-    test.deepEqual(localStorage.keys, ['/'])
+    test.deepEqual(localStorage._keys, ['/'])
     test.equal(localStorage.length, 1)
     
     test.equal(localStorage.key(0), '/')
@@ -50,7 +50,7 @@ exports.LocalStorageTest =
     ls.setItem(1, n1000)
     ls.setItem(2, n1000)
     ls.setItem(3, n1000)
-    test.equal(ls.getBytesInUse(), 3000)
+    test.equal(ls._getBytesInUse(), 3000)
 
     f = () ->
       ls.setItem(6, n10)
@@ -88,15 +88,17 @@ exports.LocalStorageTest =
     localStorage.setItem('c', 'hello')
     localStorage.setItem('d', 'hello')
 
-    test.deepEqual(localStorage.keys, ['a', 'b', 'c', 'd'])
+    test.deepEqual(localStorage._keys, ['a', 'b', 'c', 'd'])
     localStorage.removeItem('c')
-    test.deepEqual(localStorage.keys, ['a', 'b', 'd'])
+    test.deepEqual(localStorage._keys, ['a', 'b', 'd'])
     localStorage.removeItem('a');
-    test.deepEqual(localStorage.keys, ['b', 'd'])
+    test.deepEqual(localStorage._keys, ['b', 'd'])
     localStorage.removeItem('b')
-    test.deepEqual(localStorage.keys, ['d'])
+    test.deepEqual(localStorage._keys, ['d'])
     localStorage.removeItem('d')
-    test.deepEqual(localStorage.keys, [])
+    test.deepEqual(localStorage._keys, [])
+
+    localStorage._deleteLocation()
     test.done()
 
   testEvents: (test) ->
@@ -153,8 +155,8 @@ exports.LocalStorageTest =
     localStorage.setItem('stat', o)
     test.deepEqual(localStorage.getItem('stat'), o.toString())
 
-    test.ok(localStorage.getStat('stat')?)
-    test.equal(localStorage.getStat('not there'), null)
+    test.ok(localStorage._getStat('stat')?)
+    test.equal(localStorage._getStat('not there'), null)
 
     localStorage._deleteLocation()
     test.done()

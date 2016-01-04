@@ -14,7 +14,7 @@ runSync = (command) ->
     args = ['-c', command]
   {status, stdout, stderr} = spawnSync(shell, args, {encoding: 'utf8'})
   if stderr?.length > 0 or status > 0
-    console.error("Error running: '#{command}'\n#{stderr}\n")
+    console.error("Error running: '#{command}'\n#{stderr}\n#{stdout}\n")
     process.exit(status)
   else
     console.log("Output of running '#{command}'\n#{stdout}\n")
@@ -39,6 +39,7 @@ task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
 )
 
 task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
+  invoke('testES6')
   {reporters} = require('nodeunit')
   process.chdir(__dirname)
   reporters.default.run(['test'], undefined, (failure) -> 
@@ -46,6 +47,10 @@ task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
       console.log(failure)
       process.exit(1)
   )
+)
+
+task('testES6', 'Run tests in testES6 folder with --harmony-proxies flag', () ->
+  runSync("node --harmony-proxies $(which nodeunit) testES6/*.coffee")
 )
 
 task('publish', 'Publish to npm and add git tags', () ->

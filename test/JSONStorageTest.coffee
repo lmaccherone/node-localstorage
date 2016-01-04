@@ -5,7 +5,7 @@ exports.JSONStorageTest =
   testJSONStorage: (test) ->
     localStorage = new JSONStorage('./scratch')
 
-    test.equal(localStorage.location, './scratch')
+    test.equal(localStorage._location, './scratch')
 
     localStorage.setItem('/', 'something')
     test.equal(localStorage.getItem('/'), 'something')
@@ -17,13 +17,13 @@ exports.JSONStorageTest =
     localStorage.setItem('2', a)
     test.deepEqual(localStorage.getItem('2'), a)
 
-    test.deepEqual(localStorage.keys, ['/', '2'])
+    test.deepEqual(localStorage._keys, ['/', '2'])
     test.equal(localStorage.length, 2)
 
     localStorage.removeItem('2')
     test.equal(localStorage.getItem('2'), null)
 
-    test.deepEqual(localStorage.keys, ['/'])
+    test.deepEqual(localStorage._keys, ['/'])
     test.equal(localStorage.length, 1)
 
     test.equal(localStorage.key(0), '/')

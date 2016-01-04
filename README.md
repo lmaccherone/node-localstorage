@@ -6,7 +6,7 @@ Copyright (c) 2012, Lawrence S. Maccherone, Jr.
 
 _A drop-in substitute for the browser native localStorage API that runs on node.js._
 
-### Working ###
+### Fully implements the localStorage specfication including: ###
 
 * All methods in the [localStorage spec](http://www.w3.org/TR/webstorage/#storage) 
   interface including:
@@ -25,10 +25,12 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   information in place of the window uri, so if we later wanted to say think of other node.js processes accessing
   the same file system, we could actually implement it correctly. That would involve file watchers though and was more
   than we wanted to implement for now. Maybe later.
-
-### Unsupported ###
-
-* Associative array syntax `localStorage['myKey'] = 'myValue'`
+* (experimental) Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
+  syntax. This only works if you use the --harmony-proxies flag. It senses the existence of the Proxy object in the root 
+  scope. If you have added your own Proxy object, then you could have a problem. Another potential risk is around 
+  the "private", underscore preceded methods and properties. I had to reserve those in addition to the standard ones, 
+  so you won't be able to use keys that overlap with those underscore preceded properties and methods in a harmony-proxies
+  environment.
 
 ## Credits ##
 
@@ -66,6 +68,8 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 1.1.0 - 2016-01-03 - **Backward breaking** if you used any of the non-standard methods. They are now all preceded with
+  an underscore. Big upgrade for this version is experimental support for associative array and dot-property syntax.
 * 1.0.0 - 2016-01-03 - Fixed bug with empty string key (thanks, tinybike)
 * 0.6.0 - 2015-09-11 - Removed references to deprecated fs.existsSync() (thanks, josephbosire)
 * 0.5.2 - 2015-08-01 - Fixed defect where keys were not being updated correctly by removeItem() (thanks, ed69140)
