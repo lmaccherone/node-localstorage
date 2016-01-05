@@ -60,18 +60,15 @@ class LocalStorage extends events.EventEmitter
     @_QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
 
     if Proxy?
-      reserved = ["length", "setItem", "getItem", "removeItem", "key", "clear", "_deleteLocation", "_location", 
-        "_metaKeyMap", "_keys", "_bytesInUse", "_init", "_eventUrl", "_QUOTA_EXCEEDED_ERR"]
-
       handler =
         set: (receiver, key, value) =>
-          if key in reserved
+          if @[key]?
             return @[key]
           else
             @setItem(key, value)
 
         get: (receiver, key) =>
-          if key in reserved
+          if @[key]?
             return @[key]
           else
             return @getItem(key)

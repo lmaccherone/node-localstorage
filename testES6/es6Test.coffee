@@ -3,7 +3,7 @@
 exports.es6Test =
 
   theTest: (test) ->
-    localStorage = new LocalStorage('./scratch')
+    localStorage = new LocalStorage('./scratch9')
 
     localStorage['a'] = 'something'
     test.equal(localStorage['a'], 'something')

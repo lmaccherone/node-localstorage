@@ -68,6 +68,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 1.1.1 - 2016-01-04 - Smarter associative array and dot-property syntax support
 * 1.1.0 - 2016-01-03 - **Backward breaking** if you used any of the non-standard methods. They are now all preceded with
   an underscore. Big upgrade for this version is experimental support for associative array and dot-property syntax.
 * 1.0.0 - 2016-01-03 - Fixed bug with empty string key (thanks, tinybike)
