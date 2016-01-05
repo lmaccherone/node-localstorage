@@ -63,7 +63,7 @@ class LocalStorage extends events.EventEmitter
       handler =
         set: (receiver, key, value) =>
           if @[key]?
-            return @[key]
+            return @[key] = value
           else
             @setItem(key, value)
 
