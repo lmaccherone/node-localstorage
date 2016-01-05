@@ -84,7 +84,7 @@ task('publish', 'Publish to npm and add git tags', () ->
       console.log('creating git tag')
       runSync("git tag v#{require('./package.json').version}")
       runSync("git push --tags")
-      runSync("cake clean")
+      invoke("clean")
     else
       console.error('Origin and master out of sync. Not publishing.')
 )
