@@ -47,10 +47,17 @@ createMap = -> # createMap contains Metakeys as properties
 
 
 class LocalStorage extends events.EventEmitter
+  instanceMap = {}
 
   constructor: (@_location, @quota = 5 * 1024 * 1024) ->
     unless this instanceof LocalStorage
       return new LocalStorage(@_location, @quota)
+
+    @_location = path.resolve(@_location)
+
+    if instanceMap[@_location]?
+      return instanceMap[@_location]
+
     @length = 0  # !TODO: Maybe change this to a property with __defineProperty__
     @_bytesInUse = 0
     @_keys = []
@@ -73,7 +80,11 @@ class LocalStorage extends events.EventEmitter
           else
             return @getItem(key)
 
-      return Proxy.create(handler, this)
+      instanceMap[@_location] = Proxy.create(handler, this)
+      return instanceMap[@_location]
+
+    instanceMap[@_location] = this
+    return instanceMap[@_location]
 
     # else it'll return this
   
@@ -189,6 +200,7 @@ class LocalStorage extends events.EventEmitter
     return @_bytesInUse
     
   _deleteLocation: () ->
+    delete instanceMap[@_location]
     _rm(@_location)
     @_metaKeyMap = {}
     @_keys = []

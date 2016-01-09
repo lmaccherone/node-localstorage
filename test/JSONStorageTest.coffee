@@ -1,11 +1,12 @@
 {JSONStorage} = require('../')
+path = require('path')
 
 exports.JSONStorageTest =
 
   testJSONStorage: (test) ->
     localStorage = new JSONStorage('./scratch')
 
-    test.equal(localStorage._location, './scratch')
+    test.equal(localStorage._location, path.resolve('./scratch'))
 
     localStorage.setItem('/', 'something')
     test.equal(localStorage.getItem('/'), 'something')

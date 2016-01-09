@@ -1,4 +1,5 @@
 {LocalStorage} = require('../')
+path = require('path')
 
 repeat = (string, count) ->
   a = []
@@ -11,8 +12,7 @@ exports.LocalStorageTest =
   testLocalStorage: (test) ->
     localStorage = new LocalStorage('./scratch')
 
-    test.equal(localStorage._location, './scratch')
-    
+    test.equal(localStorage._location, path.resolve('./scratch'))
     
     localStorage.setItem('/', 'something')
     test.equal(localStorage.getItem('/'), 'something')
