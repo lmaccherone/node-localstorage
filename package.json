@@ -1,6 +1,6 @@
 {
   "name": "node-localstorage",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "main": "./LocalStorage",
   "description": "A drop-in substitute for the browser native localStorage API that runs on node.js.",
   "keywords": [
@@ -37,5 +37,7 @@
       "url": "http://www.opensource.org/licenses/MIT"
     }
   ],
-  "dependencies": {}
+  "dependencies": {
+    "write-file-atomic": "^1.1.4"
+  }
 }

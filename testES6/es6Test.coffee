@@ -11,5 +11,8 @@ exports.es6Test =
     localStorage[''] = 'something else'
     test.equal(localStorage[''], 'something else')
 
+    localStorage.b = 1
+    test.equal(localStorage['b'], 1)
+
     localStorage._deleteLocation()
     test.done()

@@ -1,6 +1,7 @@
 path = require('path')
 fs = require('fs')
 events = require('events')
+writeSync = require('write-file-atomic').sync
 
 KEY_FOR_EMPTY_STRING = '---.EMPTY_STRING.---'  # Chose something that no one is likely to ever use
 
@@ -133,7 +134,7 @@ class LocalStorage extends events.EventEmitter
       oldLength = 0
     if @_bytesInUse - oldLength + valueStringLength > @quota
       throw new QUOTA_EXCEEDED_ERR()
-    fs.writeFileSync(filename, valueString, 'utf8')
+    writeSync(filename, valueString, 'utf8')
     unless existsBeforeSet
       metaKey = new MetaKey(encodedKey, (@_keys.push(key)) - 1)
       metaKey.size = valueStringLength
