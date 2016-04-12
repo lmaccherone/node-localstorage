@@ -2,7 +2,7 @@
 
 exports.es6Test =
 
-  theTest: (test) ->
+  theTest: (test) ->  # TODO: These tests are inadequate in that it will pass even when there is no Proxy object. Need to check for file existence.
     localStorage = new LocalStorage('./scratch9')
 
     localStorage['a'] = 'something'

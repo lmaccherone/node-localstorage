@@ -68,6 +68,9 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
+* 1.3.0 - 2016-04-09 - **Possibly backward breaking if you were using experimental syntax** Reverted experimental 
+  associative array and dot-property syntax. The API for Proxy changed with node.js v6.x which broke it. Then when
+  I switched to the new syntax, it broke the EventEmitter functionality. Will restore once I know how to fix that.
 * 1.2.0 - 2016-04-09 - Atomic writes (thanks, mvayngrib)
 * 1.1.2 - 2016-01-08 - Resolves issue #17 (thanks, evilaliv3)
 * 1.1.1 - 2016-01-04 - Smarter associative array and dot-property syntax support

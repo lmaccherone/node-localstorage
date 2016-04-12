@@ -67,22 +67,22 @@ class LocalStorage extends events.EventEmitter
     @_init()
     @_QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
 
-    if Proxy?
-      handler =
-        set: (receiver, key, value) =>
-          if @[key]?
-            return @[key] = value
-          else
-            @setItem(key, value)
-
-        get: (receiver, key) =>
-          if @[key]?
-            return @[key]
-          else
-            return @getItem(key)
-
-      instanceMap[@_location] = Proxy.create(handler, this)
-      return instanceMap[@_location]
+#    if Proxy?
+#      handler =
+#        set: (receiver, key, value) =>
+#          if @[key]?
+#            return @[key] = value
+#          else
+#            @setItem(key, value)
+#
+#        get: (receiver, key) =>
+#          if @[key]?
+#            return @[key]
+#          else
+#            return @getItem(key)
+#
+#      instanceMap[@_location] = Proxy.create(handler, this)
+#      return instanceMap[@_location]
 
     instanceMap[@_location] = this
     return instanceMap[@_location]
