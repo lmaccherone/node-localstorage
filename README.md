@@ -19,7 +19,7 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
 * Serializes to disk in the location specified during instantiation
 * Supports the setting of a quota (default 5MB)
 * Events. This doesn't exactly follow the spec which states that events are NOT supposed to be emitted to the browser window
-  that took the action that triggered the event in the first place. They are are only to be emitted to listners in
+  that took the action that triggered the event in the first place. They are only to be emitted to listeners in
   other browser windows. Early browser implementations actually did it this way and we don't really have the equivalent
   of a browser window in node.js, so we choose to implement them in the current process. We did, however, include the pid
   information in place of the window uri, so if we later wanted to say think of other node.js processes accessing
