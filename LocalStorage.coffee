@@ -111,9 +111,15 @@ class LocalStorage extends events.EventEmitter
 
       @length = _keys.length
       return
-    catch
+    catch e
       # If it errors, that means it didn't exist, so create it
-      fs.mkdirSync(@_location)
+      if e.code != "ENOENT"
+        throw e
+      try
+        fs.mkdirSync(@_location)
+      catch e
+        if e.code != "EEXIST"
+          throw e
       return
     
   setItem: (key, value) ->
