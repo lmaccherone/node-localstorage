@@ -25,7 +25,7 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   information in place of the window uri, so if we later wanted to say think of other node.js processes accessing
   the same file system, we could actually implement it correctly. That would involve file watchers though and was more
   than we wanted to implement for now. Maybe later.
-* (experimental) Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
+* (temporarily removed) Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
   syntax. This only works if you use the --harmony-proxies flag. It senses the existence of the Proxy object in the root 
   scope. If you have added your own Proxy object, then you could have a problem. Another potential risk is around 
   the "private", underscore preceded methods and properties. I had to reserve those in addition to the standard ones, 
@@ -68,7 +68,8 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ## Changelog ##
 
-* 1.3.0 - 2016-04-09 - **Possibly backward breaking if you were using experimental syntax** Reverted experimental 
+* 1.3.1 - 2018-03-19 - Resolves issue #32 (thanks, plamens)
+* 1.3.0 - 2016-04-09 - **Possibly backward breaking if you were using experimental syntax** Reverted experimental
   associative array and dot-property syntax. The API for Proxy changed with node.js v6.x which broke it. Then when
   I switched to the new syntax, it broke the EventEmitter functionality. Will restore once I know how to fix that.
 * 1.2.0 - 2016-04-09 - Atomic writes (thanks, mvayngrib)

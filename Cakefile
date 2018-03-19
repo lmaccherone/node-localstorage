@@ -39,7 +39,7 @@ task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
 )
 
 task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
-  invoke('testES6')
+#  invoke('testES6')  # Commented out for now until we use Proxy support in later versions to enable array/
   {reporters} = require('nodeunit')
   process.chdir(__dirname)
   reporters.default.run(['test'], undefined, (failure) -> 
@@ -50,7 +50,8 @@ task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
 )
 
 task('testES6', 'Run tests in testES6 folder with --harmony-proxies flag', () ->
-  runSync("node --harmony-proxies node_modules/nodeunit/bin/nodeunit testES6/es6Test.coffee")
+#  runSync("node --harmony-proxies node_modules/nodeunit/bin/nodeunit testES6/es6Test.coffee")
+  runSync("node node_modules/nodeunit/bin/nodeunit testES6/es6Test.coffee")
 )
 
 task('publish', 'Publish to npm and add git tags', () ->
