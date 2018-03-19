@@ -50,7 +50,7 @@ task('test', 'Run the CoffeeScript test suite with nodeunit', () ->
 )
 
 task('testES6', 'Run tests in testES6 folder with --harmony-proxies flag', () ->
-  runSync("node --harmony-proxies $(which nodeunit) testES6/*.coffee")
+  runSync("node --harmony-proxies node_modules/nodeunit/bin/nodeunit testES6/es6Test.coffee")
 )
 
 task('publish', 'Publish to npm and add git tags', () ->
