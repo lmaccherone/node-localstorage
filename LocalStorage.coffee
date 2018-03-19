@@ -88,7 +88,7 @@ class LocalStorage extends events.EventEmitter
     return instanceMap[@_location]
 
     # else it'll return this
-  
+
   _init: () ->
     try
       stat = fs.statSync(@_location)
@@ -112,7 +112,7 @@ class LocalStorage extends events.EventEmitter
       @length = _keys.length
       return
     catch e
-      # If it errors, that means it didn't exist, so create it
+      # If it errors, that might mean it didn't exist, so try to create it
       if e.code != "ENOENT"
         throw e
       try
@@ -121,7 +121,7 @@ class LocalStorage extends events.EventEmitter
         if e.code != "EEXIST"
           throw e
       return
-    
+
   setItem: (key, value) ->
     hasListeners = events.EventEmitter.listenerCount(this, 'storage')
     oldValue = null
@@ -130,7 +130,7 @@ class LocalStorage extends events.EventEmitter
     key = _escapeKey(key)
     encodedKey = encodeURIComponent(key)
     filename = path.join(@_location, encodedKey)
-    valueString = value.toString()  
+    valueString = value.toString()
     valueStringLength = valueString.length
     metaKey = @_metaKeyMap[key]
     existsBeforeSet = !!metaKey
@@ -189,10 +189,10 @@ class LocalStorage extends events.EventEmitter
       if hasListeners
         evnt = new StorageEvent(key, oldValue, null, @_eventUrl)
         this.emit('storage', evnt)
-    
+
   key: (n) ->
     return @_keys[n]
-    
+
   clear: () ->
     _emptyDirectory(@_location)
     @_metaKeyMap = createMap()
@@ -205,7 +205,7 @@ class LocalStorage extends events.EventEmitter
 
   _getBytesInUse: () ->
     return @_bytesInUse
-    
+
   _deleteLocation: () ->
     delete instanceMap[@_location]
     _rm(@_location)
@@ -226,4 +226,3 @@ class JSONStorage extends LocalStorage
 exports.LocalStorage = LocalStorage
 exports.JSONStorage = JSONStorage
 exports.QUOTA_EXCEEDED_ERR = QUOTA_EXCEEDED_ERR
-
