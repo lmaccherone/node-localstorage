@@ -50,6 +50,17 @@ Author: [Larry Maccherone](http://maccherone.com)
     
     localStorage._deleteLocation()  # cleans up ./scratch created during doctest
 
+### ReactJs ###
+
+Open or create `src/setupTests.js` and add these two lines:
+
+``` JavaScript
+// /src/setupTests.js
+import { LocalStorage } from "node-localstorage";
+
+global.localStorage = new LocalStorage('./scratch');
+```
+
 ### JavaScript ###
 
 ```JavaScript    
