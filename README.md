@@ -73,7 +73,7 @@ localStorage.setItem('myFirstKey', 'myFirstValue');
 console.log(localStorage.getItem('myFirstKey'));
 ```
 
-### Node ###
+### Polyfill on Node.js ###
 
 Preload `localStorage` at node startup as
 
