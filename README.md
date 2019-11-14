@@ -73,6 +73,14 @@ localStorage.setItem('myFirstKey', 'myFirstValue');
 console.log(localStorage.getItem('myFirstKey'));
 ```
 
+### Node ###
+
+Preload `localStorage` at node startup as
+
+```sh
+node -r node-localstorage/register test.js
+```
+
 ## Installation ##
 
 `npm install node-localstorage`
