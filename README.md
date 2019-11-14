@@ -75,7 +75,7 @@ console.log(localStorage.getItem('myFirstKey'));
 
 ### Polyfill on Node.js ###
 
-Preload `localStorage` at node startup as
+Polyfil your node.js environment with this as the global localStorage when launching your own code
 
 ```sh
 node -r node-localstorage/register test.js
