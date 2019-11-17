@@ -24,13 +24,13 @@ _escapeKey = (key) ->
 
 class QUOTA_EXCEEDED_ERR extends Error
   constructor: (@message = 'Unknown error.') ->
+    super()
     if Error.captureStackTrace?
       Error.captureStackTrace(this, @constructor)
     @name = @constructor.name
 
   toString: () ->
     return "#{@name}: #{@message}"
-
 
 class StorageEvent
   constructor: (@key, @oldValue, @newValue, @url, @storageArea = 'localStorage') ->
@@ -51,6 +51,10 @@ class LocalStorage extends events.EventEmitter
   instanceMap = {}
 
   constructor: (@_location, @quota = 5 * 1024 * 1024) ->
+    super()
+    # super(_location, quota)
+    # @_location = _location
+    # @quota = quota
     unless this instanceof LocalStorage
       return new LocalStorage(@_location, @quota)
 
