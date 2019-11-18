@@ -32,10 +32,11 @@
   "scripts": {
     "test": "npm run build && coffeetape test/*.coffee | tap-spec",
     "coverage": "npm run build && nyc --reporter=lcov coffeetape test/*.coffee | tap-nyc",
+    "coverage:report": "nyc report --reporter=text-summary",
     "publish:patch": "npm run test && npm version patch && npm publish",
     "publish:minor": "npm run test && npm version minor && npm publish",
     "publish:major": "npm run test && npm version major && npm publish",
-    "coverage:report": "nyc report --reporter=text-summary",
+    "postpublish": "git push --tags",
     "build": "coffee -c *.coffee",
     "prepare": "coffee -c *.coffee"
   },
