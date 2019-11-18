@@ -24,7 +24,7 @@ task('publish', 'Publish to npm and add git tags', () ->
   process.chdir(__dirname)
   runSync('npm test')  # Doing this externally to make it synchronous
   process.chdir(__dirname)
-  runSync('cake compile')
+  runSync('npm build')
   console.log('checking git status --porcelain')
   stdout = runSync('git status --porcelain')
   if stdout.length > 0
