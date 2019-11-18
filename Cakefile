@@ -21,10 +21,9 @@ runSync = (command) ->
     return stdout
 
 task('publish', 'Publish to npm and add git tags', () ->
+  console.log('building and testing')
   process.chdir(__dirname)
   runSync('npm test')  # Doing this externally to make it synchronous
-  process.chdir(__dirname)
-  runSync('npm run build')
   console.log('checking git status --porcelain')
   stdout = runSync('git status --porcelain')
   if stdout.length > 0
