@@ -81,6 +81,7 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
+* 2.1.2 - 2019-11-17 - Cake publish fix
 * 2.1.1 - 2019-11-17 - npm publish cleanup
 * 2.1.0 - 2019-11-17 - Added back dot-property and associative-array syntax using ES6 Proxy
 * 2.0.0 - 2019-11-17 - Updated all the depdendencies, added ability to register as polyfill (thanks @dy)
