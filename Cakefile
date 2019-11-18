@@ -20,24 +20,6 @@ runSync = (command) ->
     console.log("Output of running '#{command}'\n#{stdout}\n")
     return stdout
 
-task('clean', 'Deletes .js and .map files', () ->
-  folders = ['.']
-  for folder in folders
-    pathToClean = path.join(__dirname, folder)
-    contents = fs.readdirSync(pathToClean)
-    for file in contents when (_.endsWith(file, '.js') or _.endsWith(file, '.map'))
-      fs.unlinkSync(path.join(pathToClean, file))
-)
-
-task('compile', 'Compile CoffeeScript source files to JavaScript', () ->
-  process.chdir(__dirname)
-  fs.readdir('./', (err, contents) ->
-    files = ("#{file}" for file in contents when (file.indexOf('.coffee') > 0))
-    command = ['coffee', '-c'].concat(files).join(' ')
-    runSync(command)
-  )
-)
-
 task('publish', 'Publish to npm and add git tags', () ->
   process.chdir(__dirname)
   runSync('npm test')  # Doing this externally to make it synchronous

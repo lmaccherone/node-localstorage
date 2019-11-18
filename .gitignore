@@ -1,6 +1,9 @@
 .DS_Store
 scratch
+coverage
+.nyc_output
+.play
 node_modules
 .idea
-*.js
+LocalStorage.js
 *.map

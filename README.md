@@ -17,19 +17,12 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   * clear()  
 * Serializes to disk in the location specified during instantiation
 * Supports the setting of a quota (default 5MB)
-* Events. This doesn't exactly follow the spec which states that events are NOT supposed to be emitted to the browser window
-  that took the action that triggered the event in the first place. They are only to be emitted to listeners in
-  other browser windows. Early browser implementations actually did it this way and we don't really have the equivalent
-  of a browser window in node.js, so we choose to implement them in the current process. We did, however, include the pid
-  information in place of the window uri, so if we later wanted to say think of other node.js processes accessing
-  the same file system, we could actually implement it correctly. That would involve file watchers though and was more
-  than we wanted to implement for now. Maybe later.
-* (temporarily removed) Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
-  syntax. This only works if you use the --harmony-proxies flag. It senses the existence of the Proxy object in the root 
-  scope. If you have added your own Proxy object, then you could have a problem. Another potential risk is around 
-  the "private", underscore preceded methods and properties. I had to reserve those in addition to the standard ones, 
-  so you won't be able to use keys that overlap with those underscore preceded properties and methods in a harmony-proxies
-  environment.
+* Events. This doesn't exactly follow the spec which states that events are NOT supposed to be emitted to the 
+  browser window that took the action that triggered the event in the first place. They are only to be emitted to listeners in other browser windows. Early browser implementations actually did it this way and we don't really have the equivalent of a browser window in node.js, so we choose to implement them in the current process.
+* Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
+  syntax. If you are in an ES6 supported environment. Limitations:
+  * You won't be able to use keys that collide with my "private" (starts with "_" like "_init") properties and
+    methods.
 
 ## Credits ##
 
@@ -88,7 +81,8 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
-* 2.0.0 - 2019-10-17 - Updated all the depdendencies, added ability to register as polyfill (thanks @dy)
+* 2.1.0 - 2019-11-17 - Added back dot-property and associative-array syntax using ES6 Proxy
+* 2.0.0 - 2019-11-17 - Updated all the depdendencies, added ability to register as polyfill (thanks @dy)
 * 1.3.1 - 2018-03-19 - Resolves issue #32 (thanks, plamens)
 * 1.3.0 - 2016-04-09 - **Possibly backward breaking if you were using experimental syntax** Reverted experimental
   associative array and dot-property syntax. The API for Proxy changed with node.js v6.x which broke it. Then when

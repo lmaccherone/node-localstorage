@@ -11,7 +11,9 @@ tape('array and dot notation', (test) =>  # TODO: These tests are inadequate in 
   test.equal(localStorage[''], 'something else')
 
   localStorage.b = 1
-  test.equal(localStorage['b'], 1)
+  test.equal(localStorage['b'], '1')
+
+  console.log(localStorage._init.toString())
 
   localStorage._deleteLocation()
   test.end()
