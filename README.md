@@ -81,6 +81,7 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
+* 2.1.5 - 2019-12-02 - Fixed empty string key(n) return (@appy-one, thanks for reporting)
 * 2.1.2 thru 2.1.4 - 2019-11-17 - Upgrading and testing npm publish scripts
 * 2.1.1 - 2019-11-17 - npm publish cleanup
 * 2.1.0 - 2019-11-17 - Added back dot-property and associative-array syntax using ES6 Proxy

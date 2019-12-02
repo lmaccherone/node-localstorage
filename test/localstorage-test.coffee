@@ -174,6 +174,8 @@ tape('empty string', (test) =>
   localStorage.setItem('', 'something')
   test.equal(localStorage.getItem(''), 'something')
 
+  test.equal(localStorage.key(0), '')
+
   localStorage._deleteLocation()
   test.end()
 )

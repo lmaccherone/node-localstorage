@@ -194,7 +194,11 @@ class LocalStorage extends events.EventEmitter
         this.emit('storage', evnt)
 
   key: (n) ->
-    return @_keys[n]
+    rawKey = @_keys[n]
+    if rawKey is KEY_FOR_EMPTY_STRING
+      return ''
+    else
+      return rawKey 
 
   clear: () ->
     _emptyDirectory(@_location)
