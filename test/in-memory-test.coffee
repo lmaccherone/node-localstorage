@@ -37,24 +37,19 @@ tape('on fs', (test) =>
 )
 
 tape('in memory and on fs', (test) =>
-  localStorageFs = new LocalStorage(os.tmpdir())
+  localStorageFs = new LocalStorage('./scratch2')
   localStorageMem = new LocalStorage()
 
-  localStorageFs.setItem('item', 'fs')
-  localStorageMem.setItem('item', 'mem')
+  fileError = 'ENOENT: no such file or directory'
+
+  test.doesNotThrow((-> localStorageFs.setItem('item', 'fs')), fileError) # currenlty failing
+  test.doesNotThrow((-> localStorageMem.setItem('item', 'mem')), fileError)
   
-  test.notEqual(localStorageFs.getItem('item'), 'mem'); # currenlty failing
+  test.notEqual(localStorageFs.getItem('item'), 'mem');
   test.notEqual(localStorageMem.getItem('item'), 'fs');
   
-  
-  test.doesNotThrow(
-    -> localStorageFs._deleteLocation(), 
-    'Error: ENOENT: no such file or directory'
-  )
-  test.doesNotThrow(
-    -> localStorageMem._deleteLocation(), 
-    'Error: ENOENT: no such file or directory'
-  ) # currenlty failing
+  test.doesNotThrow((-> localStorageFs._deleteLocation()), fileError) # currenlty failing
+  test.doesNotThrow((-> localStorageMem._deleteLocation()), fileError)
 
   test.end()
 )
