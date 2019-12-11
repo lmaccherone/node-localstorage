@@ -1,7 +1,10 @@
 path = require('path')
 fs = require('fs')
 events = require('events')
+# 'mock-fs' must be required before 'write-file-atomic', see https://github.com/tschaub/mock-fs#caveats
+mockFs = require('mock-fs');
 writeSync = require('write-file-atomic').sync
+os = require('os');
 
 KEY_FOR_EMPTY_STRING = '---.EMPTY_STRING.---'  # Chose something that no one is likely to ever use
 
@@ -46,18 +49,31 @@ createMap = -> # createMap contains Metakeys as properties
   Map.prototype = Object.create(null);
   return new Map()
 
+mountMemoryFs = ->
+  # create only one directory, the path being of the os tmp one
+  mockFs {},
+    createCwd: false
+    createTmp: true
+  return os.tmpdir();
+
+unmountMemoryFs = ->
+  mockFs.restore();
 
 class LocalStorage extends events.EventEmitter
   instanceMap = {}
 
-  constructor: (@_location, @quota = 5 * 1024 * 1024) ->
+  constructor: (@_location = null, @quota = 5 * 1024 * 1024) ->
     super()
     # super(_location, quota)
     # @_location = _location
     # @quota = quota
     unless this instanceof LocalStorage
       return new LocalStorage(@_location, @quota)
-
+    
+    # no location is in-memory mode
+    @_memoryFs = @_location is null
+    @_location = mountMemoryFs() if @_memoryFs
+    
     @_location = path.resolve(@_location)
 
     if instanceMap[@_location]?
@@ -220,6 +236,7 @@ class LocalStorage extends events.EventEmitter
     @_keys = []
     @length = 0
     @_bytesInUse = 0
+    unmountMemoryFs() if @_memoryFs
 
 class JSONStorage extends LocalStorage
 
