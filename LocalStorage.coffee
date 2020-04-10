@@ -119,7 +119,7 @@ class LocalStorage extends events.EventEmitter
       if e.code != "ENOENT"
         throw e
       try
-        fs.mkdirSync(@_location)
+        fs.mkdirSync(@_location, { recursive: true })
       catch e
         if e.code != "EEXIST"
           throw e
