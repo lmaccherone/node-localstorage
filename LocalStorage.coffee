@@ -19,7 +19,7 @@ _escapeKey = (key) ->
   if key is ''
     newKey = KEY_FOR_EMPTY_STRING
   else
-    newKey = key.toString()
+    newKey = "#{key}"
   return newKey
 
 class QUOTA_EXCEEDED_ERR extends Error
@@ -133,7 +133,7 @@ class LocalStorage extends events.EventEmitter
     key = _escapeKey(key)
     encodedKey = encodeURIComponent(key)
     filename = path.join(@_location, encodedKey)
-    valueString = value.toString()
+    valueString = "#{value}"
     valueStringLength = valueString.length
     metaKey = @_metaKeyMap[key]
     existsBeforeSet = !!metaKey
