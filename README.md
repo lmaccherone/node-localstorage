@@ -17,12 +17,22 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   * clear()  
 * Serializes to disk in the location specified during instantiation
 * Supports the setting of a quota (default 5MB)
-* Events. This doesn't exactly follow the spec which states that events are NOT supposed to be emitted to the 
-  browser window that took the action that triggered the event in the first place. They are only to be emitted to listeners in other browser windows. Early browser implementations actually did it this way and we don't really have the equivalent of a browser window in node.js, so we choose to implement them in the current process.
+* Events. Follows the spec in all ways that make sense for node.js. 
+  However, the spec  states that events are NOT supposed to be emitted to the
+  browser window that took the action that triggered the event in the first place.
+  Since we don't really have the equivalent of a browser window in node.js, we trigger
+  events in the current process.
 * Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
-  syntax. If you are in an ES6 supported environment. Limitations:
-  * You won't be able to use keys that collide with my "private" (starts with "_" like "_init") properties and
-    methods.
+  syntax. If you are in an ES6 supported environment. 
+  
+### Limitations:
+* When using Associative array or dot property syntax, you cannot use keys that 
+  collide with my "private" properties and methods including keys that start 
+  with "_" like "_init"
+* If you specify a location that already has files in it when you create an 
+  instance, you might already exceed the quota or might do so sooner than you
+  expect. This is intentional because we want it to behave like the browser
+  and persist the storage even after your program is restarted.
 
 ## Credits ##
 
@@ -81,6 +91,7 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
+* 2.1.8 - 2021-06-04 - Fixed serveral small issues reported by users
 * 2.1.7 - 2020-06-08 - Fixed stringifying null and undefined (thanks @gamesaucer)
 * 2.1.6 - 2020-04-10 - Fix backward compatibility bug (thanks @WillBartee)
 * 2.1.5 - 2019-12-02 - Fixed empty string key(n) return (@appy-one, thanks for reporting)
