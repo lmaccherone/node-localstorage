@@ -91,7 +91,7 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
-* 2.1.8 - 2021-06-04 - Fixed serveral small issues reported by users
+* 2.2.1 - 2021-06-04 - Fixed serveral small issues reported by users
 * 2.1.7 - 2020-06-08 - Fixed stringifying null and undefined (thanks @gamesaucer)
 * 2.1.6 - 2020-04-10 - Fix backward compatibility bug (thanks @WillBartee)
 * 2.1.5 - 2019-12-02 - Fixed empty string key(n) return (@appy-one, thanks for reporting)
