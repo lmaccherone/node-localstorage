@@ -30,7 +30,7 @@
     "tap-spec": "^5.0.0"
   },
   "scripts": {
-    "test": "npm run build && coffeetape test/*.coffee | tap-spec",
+    "test": "npm run build && coffeetape 'test/*.coffee' | tap-spec",
     "coverage": "npm run build && nyc --reporter=lcov coffeetape test/*.coffee | tap-nyc",
     "coverage:summary": "nyc report --reporter=text-summary",
     "coverage:report": "python3 -m http.server 3000 -d coverage/lcov-report",
