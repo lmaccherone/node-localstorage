@@ -126,7 +126,7 @@ class LocalStorage extends events.EventEmitter
       return
 
   setItem: (key, value) ->
-    hasListeners = events.EventEmitter.listenerCount(this, 'storage')
+    hasListeners = this.listenerCount('storage')
     oldValue = null
     if hasListeners
       oldValue = this.getItem(key)
@@ -176,7 +176,7 @@ class LocalStorage extends events.EventEmitter
     key = _escapeKey(key)
     metaKey = @_metaKeyMap[key]
     if (!!metaKey)
-      hasListeners = events.EventEmitter.listenerCount(this, 'storage')
+      hasListeners = this.listenerCount('storage')
       oldValue = null
       if hasListeners
         oldValue = this.getItem(key)
@@ -207,7 +207,7 @@ class LocalStorage extends events.EventEmitter
     @_keys = []
     @length = 0
     @_bytesInUse = 0
-    if events.EventEmitter.listenerCount(this, 'storage')
+    if this.listenerCount('storage')
       evnt = new StorageEvent(null, null, null, @_eventUrl)
       this.emit('storage', evnt)
 
