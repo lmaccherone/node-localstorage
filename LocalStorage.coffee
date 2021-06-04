@@ -131,7 +131,9 @@ class LocalStorage extends events.EventEmitter
     if hasListeners
       oldValue = this.getItem(key)
     key = _escapeKey(key)
-    encodedKey = encodeURIComponent(key)
+    # encodedKey = encodeURIComponent(key)
+    encodedKey = encodeURIComponent(key).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
+
     filename = path.join(@_location, encodedKey)
     valueString = "#{value}"
     valueStringLength = valueString.length
