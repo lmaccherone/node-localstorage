@@ -38,7 +38,7 @@
     "publish:minor": "npm run test && npm version minor && npm publish",
     "publish:major": "npm run test && npm version major && npm publish",
     "postpublish": "git push --tags",
-    "build": "coffee -c *.coffee",
+    "build": "node_modules/.bin/coffee -c *.coffee",
     "prepare": "coffee -c *.coffee"
   },
   "license": "MIT",
