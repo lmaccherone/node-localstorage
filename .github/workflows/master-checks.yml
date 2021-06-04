@@ -25,9 +25,9 @@ jobs:
           # - macos-latest
           - windows-latest
         node_version:
-          # - 10
+          - 10
           # - 12
-          - 14
+          # - 14
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
