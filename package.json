@@ -39,7 +39,7 @@
     "publish:major": "npm run test && npm version major && npm publish",
     "postpublish": "git push --tags",
     "build": "node_modules/.bin/coffee -c *.coffee",
-    "prepare": "coffee -c *.coffee"
+    "prepare": "node_modules/.bin/coffee -c *.coffee"
   },
   "license": "MIT",
   "dependencies": {
