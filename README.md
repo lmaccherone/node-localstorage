@@ -1,5 +1,6 @@
 [![build status](https://secure.travis-ci.org/lmaccherone/node-localstorage.png)](http://travis-ci.org/lmaccherone/node-localstorage)
-# node-localstorage #
+
+# node-localstorage [![sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/lmaccherone) #
 
 Copyright (c) 2012, Lawrence S. Maccherone, Jr.
 
