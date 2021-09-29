@@ -125,6 +125,7 @@ class LocalStorage extends events.EventEmitter
           throw e
       return
   sync:()->
+    @_bytesInUse = 0;
     _keys = fs.readdirSync(@_location)
     for k, index in _keys
       _decodedKey = decodeURIComponent(k)
