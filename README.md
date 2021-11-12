@@ -1,4 +1,4 @@
-[![build status](https://secure.travis-ci.org/lmaccherone/node-localstorage.png)](http://travis-ci.org/lmaccherone/node-localstorage)
+![CI](https://github.com/lmaccherone/node-localstorage/actions/workflows/master-checks.yml/badge.svg)
 
 # node-localstorage [![sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/lmaccherone) #
 
