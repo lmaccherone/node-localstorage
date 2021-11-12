@@ -28,7 +28,7 @@
     "nyc": "^15.1.0",
     "tap-nyc": "^1.0.3",
     "tap-spec": "^2.2.2",
-    "trim": ">=0.0.3"
+    "trim-newlines": ">=3.0.1"
   },
   "scripts": {
     "test": "npm run build && coffeetape test/*.coffee | tap-spec",
