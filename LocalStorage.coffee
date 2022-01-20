@@ -124,7 +124,8 @@ class LocalStorage extends events.EventEmitter
         if e.code != "EEXIST"
           throw e
       return
-  sync:()->
+
+  _sync:()->
     @_bytesInUse = 0;
     _keys = fs.readdirSync(@_location)
     for k, index in _keys
