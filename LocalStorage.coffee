@@ -98,21 +98,9 @@ class LocalStorage extends events.EventEmitter
       if stat? and not stat.isDirectory()
         throw new Error("A file exists at the location '#{@_location}' when trying to create/open localStorage")
       # At this point, it exists and is definitely a directory. So read it.
-      @_bytesInUse = 0
-      @length = 0
 
-      _keys = fs.readdirSync(@_location)
-      for k, index in _keys
-        _decodedKey = decodeURIComponent(k)
-        @_keys.push(_decodedKey)
-        _MetaKey = new MetaKey(k, index)
-        @_metaKeyMap[_decodedKey] = _MetaKey
-        stat = @_getStat(k)
-        if stat?.size?
-          _MetaKey.size = stat.size
-          @_bytesInUse += stat.size
+      _sync()
 
-      @length = _keys.length
       return
     catch e
       # If it errors, that might mean it didn't exist, so try to create it
@@ -126,7 +114,8 @@ class LocalStorage extends events.EventEmitter
       return
 
   _sync:()->
-    @_bytesInUse = 0;
+    @_bytesInUse = 0
+    @length = 0
     _keys = fs.readdirSync(@_location)
     for k, index in _keys
       _decodedKey = decodeURIComponent(k)
