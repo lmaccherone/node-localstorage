@@ -94,7 +94,8 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
-* 3.0.0 - 2023-07-25 - **Backward breaking** Upgrade node.js requirements to 16.x. Bug and compatability fixes
+* 3.0.1 - 2023-07-25 - Object.keys(localStorage) now behaves the same as browser closing Issue #27 (thanks @Hotell)
+* 3.0.0 - 2023-07-25 - **Backward breaking** Upgrade node.js requirements to 14.x. Bug and compatability fixes
 * 2.2.1 - 2021-06-04 - Fixed serveral small issues reported by users
 * 2.1.7 - 2020-06-08 - Fixed stringifying null and undefined (thanks @gamesaucer)
 * 2.1.6 - 2020-04-10 - Fix backward compatibility bug (thanks @WillBartee)
