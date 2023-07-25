@@ -13,6 +13,8 @@ tape('array and dot notation', (test) =>  # TODO: These tests are inadequate in 
   localStorage.b = 1
   test.equal(localStorage['b'], '1')
 
+  test.deepEqual(Object.keys(localStorage), ['a', '', 'b'])
+
   localStorage._deleteLocation()
   test.end()
 )

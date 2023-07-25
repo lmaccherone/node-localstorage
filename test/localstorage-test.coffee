@@ -37,7 +37,6 @@ tape('localStorage API', (test) =>
   test.equal(localStorage.length, 0)
       
   localStorage._deleteLocation()
-
   test.end()
 )
 
@@ -93,6 +92,7 @@ tape('remove keys', (test) =>
   localStorage.setItem('d', 'hello')
 
   test.deepEqual(localStorage._keys, ['a', 'b', 'c', 'd'])
+  test.deepEqual(Object.keys(localStorage), ['a', 'b', 'c', 'd'])
   localStorage.removeItem('c')
   test.deepEqual(localStorage._keys, ['a', 'b', 'd'])
   localStorage.removeItem('a');
@@ -101,6 +101,7 @@ tape('remove keys', (test) =>
   test.deepEqual(localStorage._keys, ['d'])
   localStorage.removeItem('d')
   test.deepEqual(localStorage._keys, [])
+  test.deepEqual(Object.keys(localStorage), [])
 
   localStorage._deleteLocation()
   test.end()

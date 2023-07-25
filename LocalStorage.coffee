@@ -76,15 +76,29 @@ class LocalStorage extends events.EventEmitter
         set: (receiver, key, value) =>
           if @[key]?
             @[key] = value
-            return true
           else
             @setItem(key, value)
+          return true
 
         get: (receiver, key) =>
           if @[key]?
             return @[key]
           else
             return @getItem(key)
+
+        ownKeys: (target) =>
+          return @_keys.map((k) -> 
+            if k is KEY_FOR_EMPTY_STRING
+              ''
+            else
+              k
+          )
+
+        getOwnPropertyDescriptor: (target, key) =>
+          return
+            value: @[key]
+            enumerable: true
+            configurable: true
 
       instanceMap[@_location] = new Proxy(this, handler)
       return instanceMap[@_location]
