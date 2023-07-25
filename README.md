@@ -94,6 +94,7 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
+* 3.0.2 - 2023-07-25 - Grrr forgot to update changlelog and package.json before running `npm publish`
 * 3.0.1 - 2023-07-25 - Object.keys(localStorage) now behaves the same as browser closing Issue #27 (thanks @Hotell)
 * 3.0.0 - 2023-07-25 - **Backward breaking** Upgrade node.js requirements to 14.x. Bug and compatability fixes
 * 2.2.1 - 2021-06-04 - Fixed serveral small issues reported by users
