@@ -34,16 +34,16 @@ tape('JSONStorage', (test) =>
   test.end()
 )
 
-tape('no new keyword', (test) =>
-  local = JSONStorage('./scratch3')
-  local.setItem('Hello', ' world!')
-  test.equals(local.getItem('Hello'), ' world!')
-  local._deleteLocation()
-  test.end()
-)
+# tape('no new keyword', (test) =>
+#   local = JSONStorage('./scratch3')
+#   local.setItem('Hello', ' world!')
+#   test.equals(local.getItem('Hello'), ' world!')
+#   local._deleteLocation()
+#   test.end()
+# )
 
 tape('null', (test) =>
-  local = JSONStorage('./scratch4')
+  local = new JSONStorage('./scratch4')
   test.equals(local.getItem('junk'), null)
   local._deleteLocation()
   test.end()

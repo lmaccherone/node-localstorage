@@ -5,6 +5,7 @@ node_modules/
 coverage
 .nyc_output
 .play
+.dccache
 test
 *.yml
 Cakefile

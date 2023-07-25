@@ -1,6 +1,6 @@
 {
   "name": "node-localstorage",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "main": "./LocalStorage",
   "description": "A drop-in substitute for the browser native localStorage API that runs on node.js.",
   "keywords": [
@@ -10,7 +10,7 @@
   ],
   "author": {
     "name": "Larry Maccherone",
-    "url": "http://maccherone.com"
+    "url": "https://www.LinkedIn.com/in/LarryMaccherone/"
   },
   "homepage": "https://github.com/lmaccherone/node-localstorage",
   "engines": {
@@ -22,13 +22,12 @@
   },
   "preferGlobal": false,
   "devDependencies": {
-    "coffeescript": "^1.12.7",
+    "coffeescript": "^2.7.0",
     "coffeetape": "^2.0.0",
-    "lodash": "^4.17.15",
     "nyc": "^15.1.0",
     "tap-nyc": "^1.0.3",
-    "tap-spec": "^2.2.2",
-    "trim-newlines": ">=3.0.1"
+    "tap-spec": "^5.0.0",
+    "tape": "^5.6.6"
   },
   "scripts": {
     "test": "npm run build && coffeetape test/*.coffee | tap-spec",
@@ -44,6 +43,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "write-file-atomic": "^1.1.4"
+    "write-file-atomic": "^5.0.1"
   }
 }
