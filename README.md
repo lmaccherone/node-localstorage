@@ -26,8 +26,8 @@ _A drop-in substitute for the browser native localStorage API that runs on node.
   Since we don't really have the equivalent of a browser window in node.js, we trigger
   events in the current process.
 * Associative array `localStorage['myKey'] = 'myValue'` and dot property `localStorage.myKey = 'myValue'`
-  syntax. If you are in an ES6 supported environment. 
-  
+  syntax. If you are in an ES6 supported environment.
+* Using `_sync` files can be re-read from disk.
 ### Limitations:
 * When using Associative array or dot property syntax, you cannot use keys that 
   collide with my "private" properties and methods including keys that start 
