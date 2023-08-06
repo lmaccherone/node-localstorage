@@ -1,6 +1,6 @@
 {
   "name": "node-localstorage",
-  "version": "3.0.2",
+  "version": "3.0.5",
   "main": "./LocalStorage",
   "description": "A drop-in substitute for the browser native localStorage API that runs on node.js.",
   "keywords": [

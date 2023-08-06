@@ -114,7 +114,7 @@ class LocalStorage extends events.EventEmitter
         throw new Error("A file exists at the location '#{@_location}' when trying to create/open localStorage")
       # At this point, it exists and is definitely a directory. So read it.
 
-      _sync()
+      @_sync()
 
       return
     catch e

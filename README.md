@@ -97,6 +97,8 @@ node -r node-localstorage/register my-code.js
 
 ## Changelog ##
 
+* 3.0.5 - 2023-08-05 - Fixed bug with `_sync()` (thanks @create3000 for the report)
+* 3.0.4 - 2023-07-25 - Merged pull request to add `_sync()` method (thanks @NexusNull)
 * 3.0.2 - 2023-07-25 - Grrr forgot to update changlelog and package.json before running `npm publish`
 * 3.0.1 - 2023-07-25 - Object.keys(localStorage) now behaves the same as browser closing Issue #27 (thanks @Hotell)
 * 3.0.0 - 2023-07-25 - **Backward breaking** Upgrade node.js requirements to 14.x. Bug and compatability fixes
